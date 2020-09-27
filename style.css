@@ -29,9 +29,9 @@
 .input-form{
 	grid-area: form;
 	position: relative;
-	margin: 10px;
+	margin: 10px 5px 10px 10px;
 	border-radius: 15px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 
@@ -49,13 +49,15 @@
 	color: black;
 	border-radius: 15px;
 	border: 1.5px solid rgba(206, 210, 214,1);
+	background: rgba(206, 210, 214,0.1);
   	outline: none;
 }
 
 
 .form-input:focus {
-	border: 2px solid rgba(162, 165, 168,0.7);
+	border: 2px solid rgba(66, 135, 245,0.7);
 	background: rgba(245, 246, 247,0.5);
+	box-shadow: 2px 2px 2px rgba(66, 135, 245, 0.2), -2px 2px 2px rgba(66, 135, 245, 0.2), -2px -2px 2px rgba(66, 135, 245, 0.2);
 }
 
 .form-radio{
@@ -80,17 +82,22 @@
 	display: inline-block;
 	height: 45px;
 	width: 200px;
+	background: rgba(204, 208, 227, 0.5);
 	border-radius: 25px;
 	border:none;
 	outline: none;
 	box-shadow: 5px 5px 5px grey;
 }
 
+.form-btn:hover {
+	background: rgba(204, 208, 227, 1);
+}
 
-
-.form-btn:focus {
+.form-btn:active {
 	box-shadow: 3px 3px 3px grey;
 }
+
+
 
 
 
@@ -99,8 +106,9 @@
 .result{
 	grid-area: result;
 	position: relative;
-	margin: 10px;
-	border: 1px solid black;
+	margin: 10px 10px 10px 5px;
+	border-radius: 15px;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .result-methods{
@@ -110,22 +118,27 @@
 	width: auto;
 	top: 2%;
 	left: 2%;
-	border: 1px solid black;
 }
 
 .result-method{
 	display: inline-block;
 	position: relative;
-	padding: 5px 3px;
+	padding: 5px 4px;
 	background: #ff414d;
-	border: 1px solid black;
+	border-radius: 5px;
+	outline: none;
+	border: 2px solid black;
 }
 
-.macro-type{
+
+.result-method: hover{
+	border: 2px solid black;
+}
+
+.macros{
 	display: inline-block;
 	position: absolute;
 	right:2%;
-	/*top: 10%;*/
 	bottom: 2%;
 	float: right;
 }
@@ -136,14 +149,15 @@
 	height: 60px;
 	width: 60px;
 	padding: 10px;
-	margin: 2px;
-	border: 1px solid black;
+	margin: 5px;
+	border: 2px solid black;
+	border-radius: 30px;
+  	outline: none;
 }
 
-.macro: focus {
-    width: 50px;
-    height: 50px;
-	border: 1px solid blue;
+.macro: active {
+	background: red;
+	border: 2px solid blue;
 }
 
 .macro img{
@@ -159,7 +173,6 @@
 	text-align: center;
 	height: 100%;
 	width: 100%;
-	border: 1px solid black;
 }
 
 #calc-result-number{
@@ -171,7 +184,6 @@
 	height: auto;
 	margin: auto;
 	color: #14ffec;
-	/*border: 1px solid black;*/
 }
 
 
@@ -182,7 +194,6 @@
 	top: 25%;
 	margin: auto;
 	display: block;
-	/*border: 1px solid black;*/
 }
 
 
