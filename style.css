@@ -23,6 +23,8 @@
 
 
 
+
+
 /*==================FORM====================*/
 
 
@@ -55,9 +57,10 @@
 
 
 .form-input:focus {
-	border: 2px solid rgba(66, 135, 245,0.7);
+	border: 1.5px solid rgba(66, 135, 245,0.7);
 	background: rgba(245, 246, 247,0.5);
 	box-shadow: 2px 2px 2px rgba(66, 135, 245, 0.2), -2px 2px 2px rgba(66, 135, 245, 0.2), -2px -2px 2px rgba(66, 135, 245, 0.2);
+	transition: 0.3s;
 }
 
 .form-radio{
@@ -91,11 +94,15 @@
 
 .form-btn:hover {
 	background: rgba(204, 208, 227, 1);
+	transition: 0.3s;
 }
 
 .form-btn:active {
 	box-shadow: 3px 3px 3px grey;
+	transition: 0.3s;
 }
+
+
 
 
 
@@ -108,6 +115,7 @@
 	position: relative;
 	margin: 10px 10px 10px 5px;
 	border-radius: 15px;
+	overflow: hidden;
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
@@ -124,17 +132,21 @@
 	display: inline-block;
 	position: relative;
 	padding: 5px 4px;
-	background: #ff414d;
+	/*background: #ff414d;*/
 	border-radius: 5px;
 	outline: none;
 	border: 2px solid black;
 }
 
 
-.result-method: hover{
-	border: 2px solid black;
+.result-method:focus {
+	border: 2px solid blue;
+	background: rgba(172, 184, 242,0.3);
 }
 
+.result-method:hover{
+	background: rgba(172, 184, 242,0.3);
+}
 .macros{
 	display: inline-block;
 	position: absolute;
@@ -151,13 +163,18 @@
 	padding: 10px;
 	margin: 5px;
 	border: 2px solid black;
+	background: red;
 	border-radius: 30px;
   	outline: none;
 }
 
-.macro: active {
-	background: red;
+.macro:focus {
 	border: 2px solid blue;
+	background: black;
+}
+
+.macro:hover{
+	background: black;
 }
 
 .macro img{
@@ -173,6 +190,7 @@
 	text-align: center;
 	height: 100%;
 	width: 100%;
+	color: rgb(60, 61, 69);
 }
 
 #calc-result-number{
@@ -183,9 +201,8 @@
 	top: 25%;
 	height: auto;
 	margin: auto;
-	color: #14ffec;
+	/*color: #14ffec;*/
 }
-
 
 #calc-result-unit{
 	font-size: 5em;
