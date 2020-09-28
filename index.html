@@ -3,6 +3,7 @@
 <head>
 	<title>Macro Calculator</title>
 	<link rel="stylesheet" type="text/css" href="style.css">
+	<meta content="width=device-width, initial-scale=1" name="viewport" />
 </head>
 <body>
 
@@ -12,19 +13,23 @@
 
 			<form class="personal-info-form">
 				<label class='form-label' for="height">Height</label>
-				<input class='form-input var-type-input' id="height-inp" type="number" name="height">
-				<select class='form-input var-type-opt' name="height-opt" id="height-opt">
-					<option value="cm">cms</option>
-					<option value="feet-inch">ft-inch</option>
-				</select>
+				<div class="var-input">
+					<input class='form-input var-type-input' id="height-inp" type="number" name="height">
+					<select class='form-input var-type-opt' name="height-opt" id="height-opt">
+						<option value="cm">cms</option>
+						<option value="feet-inch">ft-inch</option>
+					</select>
+				</div>
 
 				<label class='form-label' for="weight">Weight</label>
-				<input class='form-input var-type-input' id="weight-inp" type="number" name="weight">
-				<select class='form-input var-type-opt' name="weight-opt" id="weight-opt">
-					<option value="kgs">kgs</option>
-					<option value="lbs">lbs</option>
-				</select>
-
+				<div class="var-input">
+					<input class='form-input var-type-input' id="weight-inp" type="number" name="weight">
+					<select class='form-input var-type-opt' name="weight-opt" id="weight-opt">
+						<option value="kgs">kgs</option>
+						<option value="lbs">lbs</option>
+					</select>
+				</div>
+				
 				<label class='form-label' for="age">Age</label>
 				<input class='form-input'type="number" id="age-inp" name="age">
 
