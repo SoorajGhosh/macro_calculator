@@ -12,50 +12,47 @@
 
 			<form class="personal-info-form">
 				<label class='form-label' for="height">Height</label>
-				<input class='form-input' type="number" name="height">
+				<input class='form-input var-type-input' id="height-inp" type="number" name="height">
+				<select class='form-input var-type-opt' name="height-opt" id="height-opt">
+					<option value="cm">cms</option>
+					<option value="feet-inch">ft-inch</option>
+				</select>
 
 				<label class='form-label' for="weight">Weight</label>
-				<input class='form-input' type="number" name="weight">
+				<input class='form-input var-type-input' id="weight-inp" type="number" name="weight">
+				<select class='form-input var-type-opt' name="weight-opt" id="weight-opt">
+					<option value="kgs">kgs</option>
+					<option value="lbs">lbs</option>
+				</select>
 
 				<label class='form-label' for="age">Age</label>
-				<input class='form-input'type="number" name="age">
+				<input class='form-input'type="number" id="age-inp" name="age">
 
 				<label class='form-label' for="activity">Activity Level</label>
-					<select class='form-input'name="activity" id="activity">
-						<option value="no">No Exercise</option>
-						<option value="little">Little Exercise</option>
-						<option value="moderate">Moderate Exercise</option>
-						<option value="intense ">Intense Exercise</option>
-						<option value="hard ">Hard Exercise</option>
-					</select>
+				<select class='form-input'name="activity" id="activity-inp">
+					<option value="no">No Exercise</option>
+					<option value="little">Little Exercise</option>
+					<option value="moderate">Moderate Exercise</option>
+					<option value="intense ">Intense Exercise</option>
+					<option value="hard ">Hard Exercise</option>
+				</select>
 
 				<label class='form-label' for="goal">Goal</label>
-				<div class='form-radio'>
-					<span class='radio-option'>
-						<input type="radio" id="gain" name="goal" value="gain">
-						<label for="gain">Gain</label>
-					</span>
-					<span class='radio-option'>
-						<input type="radio" id="loss" name="goal" value="loss">
-						<label for="loss">Loss</label>
-					</span>
-				</div>
+				<select class='form-input'name="goal" id="goal-inp">
+					<option value="maintain">Maintain</option>
+					<option value="gain">Gain</option>
+					<option value="loss">Loss</option>
+				</select>
 
 				<label class='form-label' for="gender">Gender</label>
-				<div class='form-radio'>
-					<span class='radio-option'>
-						<input type="radio" id="male" name="gender" value="male">
-						<label for="male">Male</label>
-					</span>
-					<span class='radio-option'>
-						<input type="radio" id="female" name="gender" value="female">
-						<label for="female">Female</label>
-					</span>
-				</div>
+				<select class='form-input'name="gender" id="gender-inp">
+					<option value="male">Male</option>
+					<option value="female">Female</option>
+				</select>
 
-				<input class='form-btn' type="button" onclick="" value="Calculate">
+				<input class='form-btn' id="calc-btn" type="button" value="Calculate">
 
-				<input class='form-btn' type="button" onclick="" value="Clear">
+				<input class='form-btn' id="clear-btn" type="button" value="Clear">
 			</form>
 
 		</div>
@@ -83,9 +80,11 @@
 				<button class="macro" id="fat"> <img src="images/fat.png"> </button>
 			</div>
 
+			<div class="shown-result">Result: <span class="shown-result-category">BMI</span> </div>
+
+		</div>
 
 	</div>
-
-	</div>
+	<script src="app.js"></script>
 </body>
 </html>

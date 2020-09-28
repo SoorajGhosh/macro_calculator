@@ -36,17 +36,24 @@
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
-
 .personal-info-form{
 	position: relative;
 	display: block;
-	top: 3%;
+	top: 2.5%;
+	font-size: 0.9em;
+}
+
+.form-label{
+	display: block;
+	margin: 10px 15px 7px 15px;
+	font-weight: bold;
+	font-size: 1.2em;
 }
 
 .form-input{
 	display: block;
 	width: 95%;
-	margin: 5px 10px 10px 10px;
+	margin: 5px 10px 15px 10px;
 	padding: 7px;
 	color: black;
 	border-radius: 15px;
@@ -59,7 +66,10 @@
 .form-input:focus {
 	border: 1.5px solid rgba(66, 135, 245,0.7);
 	background: rgba(245, 246, 247,0.5);
-	box-shadow: 2px 2px 2px rgba(66, 135, 245, 0.2), -2px 2px 2px rgba(66, 135, 245, 0.2), -2px -2px 2px rgba(66, 135, 245, 0.2);
+	box-shadow: 2px 2px 2px rgba(66, 135, 245, 0.2), 
+				-2px 2px 2px rgba(66, 135, 245, 0.2), 
+				-2px -2px 2px rgba(66, 135, 245, 0.2), 
+				2px -2px 2px rgba(66, 135, 245, 0.2);
 	transition: 0.3s;
 }
 
@@ -67,22 +77,32 @@
 	margin: 7px 10px 15px 15px;
 }
 
+.var-type-input{
+	margin-right: 2px;
+	margin-bottom: 5px;
+	margin-top: 1px;
+	display: inline-block;
+	width: 77%;
+}
+
+.var-type-opt{
+	margin-left: 1px;
+	margin-bottom: 5px;
+	margin-top: 1px;
+	display: inline-block;
+	width: 16.5%;
+}
+
 .radio-option{
 	display: inline-block;
 	margin:0px 50px 0px 10px;
-}
-
-.form-label{
-	display: inline-block;
-	margin: 5px 15px 2px 15px;
-	font-weight: bold;
-	font-size: 1.2em;
 }
 
 .form-btn{
 	position: relative;
 	margin: 10px 15px 0px 20px;
 	display: inline-block;
+	font-size: 1em;
 	height: 45px;
 	width: 200px;
 	background: rgba(204, 208, 227, 0.5);
@@ -94,11 +114,13 @@
 
 .form-btn:hover {
 	background: rgba(204, 208, 227, 1);
+	font: normal bold 1.1em Arial;
 	transition: 0.3s;
 }
 
 .form-btn:active {
 	box-shadow: 3px 3px 3px grey;
+	font: normal bold 1.1em Arial;
 	transition: 0.3s;
 }
 
@@ -132,7 +154,7 @@
 	display: inline-block;
 	position: relative;
 	padding: 5px 4px;
-	/*background: #ff414d;*/
+	background: #ff414d;
 	border-radius: 5px;
 	outline: none;
 	border: 2px solid black;
@@ -141,15 +163,25 @@
 
 .result-method:focus {
 	border: 2px solid blue;
-	background: rgba(172, 184, 242,0.3);
+	background: black;
+	color: white;
+	transition: 0.3s;
+	/* background: rgba(172, 184, 242,0.3); */
 }
 
 .result-method:hover{
-	background: rgba(172, 184, 242,0.3);
+	background: black;
+	color: white;
+	border: 2px solid white;
+	transition: 0.3s;
+	/* background: rgba(172, 184, 242,0.3); */
 }
+
 .macros{
-	display: inline-block;
+	/* display: inline-block; */
 	position: absolute;
+	width: 80px;
+	height: 210px;
 	right:2%;
 	bottom: 2%;
 	float: right;
@@ -161,20 +193,28 @@
 	height: 60px;
 	width: 60px;
 	padding: 10px;
-	margin: 5px;
+	margin: 5px auto;
 	border: 2px solid black;
 	background: red;
-	border-radius: 30px;
+	border-radius: 50%;
   	outline: none;
 }
 
 .macro:focus {
 	border: 2px solid blue;
+	height: 65px;
+	width: 65px;
+	margin: auto auto;
 	background: black;
+	transition: 0.3s;
 }
 
-.macro:hover{
+.macro:hover {
 	background: black;
+	height: 65px;
+	width: 65px;
+	border: 2px solid white;
+	transition: 0.3s;
 }
 
 .macro img{
@@ -213,6 +253,12 @@
 	display: block;
 }
 
+.shown-result{
+	position: absolute;
+	font: normal small-caps bold 0.8em Arial;	/*font-style font-variant font-weight font-size/line-height font-family*/
+	bottom: 3%;
+	left: 2%;
+}
 
 
 
@@ -224,8 +270,22 @@
 
 
 
+@media screen and (max-width: 600px) {
+	
+	.container{
+		justify-content: space-evenly;
+		grid-template-columns: 100%;
+		grid-template-rows: 70% 30%;
+		grid-template-areas: 
+			"form"
+			"result";
+		/*background: #212121;*/
+	}
 
-
+	.personal-info-form{
+		font-size: 0.75em;
+	}
+}
 
 
 
