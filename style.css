@@ -279,31 +279,49 @@
 	
 	.container{
 		display: block;
-		font-size: 1.2em;
+		font-size: 0.9em;
 	}
 
 	.input-form{
-		height: 100%;
+		/* height: 100%; */
+		padding: 3% 0 10% 0;
+	}
+
+	.form-label{
+		margin: 3% 3% 1% 3%;
+	}
+
+	.form-input{
+		margin: 1% 3% 2% 3%;
+		padding: 2%;
+	}
+
+	.var-input{
+		width: 100%;
 	}
 
 	.var-type-input{
-		width: 70.5%;
+		width: 75%;
+		margin: 0 0% 0 3%;
 	}
 
 	.var-type-opt{
-		width: 22%;
+		width: 18%;
+		margin: 0;
 		font-size: 0.8em;
 	}
 
 	.form-btn{
-		display: block;
-		width: 95%;
+		display: inline-block;
+		width: 45%;
 		margin: 10px 15px 0px 20px;
 		margin: 10px 1% 0px 2.5%;
 	}
 
 	.result{
-		display: none;
+		display: block;
+		height: 50%;
+		margin: 1% 2% 1% 2%;
 	}
 
 	.result-methods{
@@ -317,7 +335,7 @@
 	}
 
 	#calc-result-number{
-		font-size: 5em;
+		font-size: 8em;
 	}
 
 	#calc-result-unit{
