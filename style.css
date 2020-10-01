@@ -73,6 +73,16 @@
 	transition: 0.3s;
 }
 
+.form-red-input{
+	border: 1.5px solid rgba(235, 64, 52,0.7);
+	background: rgba(245, 246, 247,0.5);
+	box-shadow: 2px 2px 2px rgba(235, 64, 52, 0.2), 
+				-2px 2px 2px rgba(235, 64, 52, 0.2), 
+				-2px -2px 2px rgba(235, 64, 52, 0.2), 
+				2px -2px 2px rgba(235, 64, 52, 0.2);
+	transition: 0.3s;
+}
+
 .form-radio{
 	margin: 7px 10px 15px 15px;
 }

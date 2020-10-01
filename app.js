@@ -1,18 +1,32 @@
 var dataCalculator = (function(){
     var bmi, bmr, maintCal, bodyFatPerc, leanBodyWeight, dailyCalIntake, proteinReq, carbReq, fatReq;
     var height, weight, age, activity, goal, gender;
+    // var invalidField;
     
     
     /*
     1. 
     */
     
+    // Check if all values are present
+    function formValuesCheck(obj){
+        for (var item in obj){
+            if (!obj[item]){
+                return item
+            }
+        }
+        return true
+    }
+
+
     return {
         calcFunction : function(formValues){
-            console.log(formValues.weight, formValues.height)
-            var bmi = Math.round(10000*formValues.weight/Math.pow(formValues.height,2));
-            console.log(bmi);
-            return [bmi,'unit']
+            if (formValuesCheck(formValues)===true){
+                var bmi = Math.round(10000*formValues.weight/Math.pow(formValues.height,2));
+                return [bmi,'unit']
+            } else {
+                return [0,'unit', formValuesCheck(formValues)]
+            }
         },
     };
 })();
@@ -60,6 +74,9 @@ var UIcontroller = (function(){
         resultDisplay : function(valArr){
             this.dom.resultValue.innerHTML = valArr[0];
             this.dom.resultUnit.innerHTML = valArr[1];
+            if (valArr[2]){
+                this.dom[valArr[2]+'Value'].classList.add("form-red-input");
+            }
         },
     };
 })();
@@ -91,6 +108,7 @@ var controller = (function(dataCalc, UIctrl){
             gender : dom.gender.value
         };
 
+        
         // SENDING THE FORM VALUES TO THE DATA CONTROLLER AND RECIEVING THE RESULT OUTPUT ARRAY
         var resultArr = dataCalc.calcFunction(formValues);
 
@@ -102,9 +120,21 @@ var controller = (function(dataCalc, UIctrl){
         dom.resultValue.innerHTML = 0;
         dom.resultUnit.innerHTML = 'unit';
     }
+    // var clearRedFocus = function(){}
 
     dom.calcBtn.addEventListener('click', main);
     dom.clearBtn.addEventListener('click', clearFunc);
+    
+    // Removing any form-red-input class
+    dom.heightValue.addEventListener('change', function(){
+        dom.heightValue.classList.remove('form-red-input');
+    });
+    dom.weightValue.addEventListener('change', function(){
+        dom.weightValue.classList.remove('form-red-input');
+    });
+    dom.ageValue.addEventListener('change', function(){
+        dom.ageValue.classList.remove('form-red-input');
+    })
 
 })(dataCalculator, UIcontroller);
 
