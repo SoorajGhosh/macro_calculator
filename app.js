@@ -1,12 +1,8 @@
 var dataCalculator = (function(){
-    var bmi, bmr, maintCal, bodyFatPerc, leanBodyWeight, dailyCalIntake, proteinReq, carbReq, fatReq;
-    var height, weight, age, activity, goal, gender;
+    // var bmi, bmr, maintCal, bodyFatPerc, leanBodyWeight, dailyCalIntake, proteinReq, carbReq, fatReq;
+    // var height, weight, age, activity, goal, gender;
     // var invalidField;
     
-    
-    /*
-    1. 
-    */
     
     // Check if all values are present
     function formValuesCheck(obj){
@@ -18,11 +14,32 @@ var dataCalculator = (function(){
         return true
     }
 
+    function checkUnits(hgtUnt,wgtUnt){
+        var hgtConst, wgtConst;
+        // Checking the Height Unit
+        if (hgtUnt === 'cms'){
+            hgtConst = 1;
+        } else if (hgtUnt === 'inch'){
+            hgtConst = 0.39;
+        }
+        // Checking the Wight Unit
+        if (wgtUnt === 'kgs'){
+            wgtConst = 1;
+        } else if (wgtUnt === 'lbs'){
+            wgtConst = 2.2;
+        }
+        return [hgtConst, wgtConst]
+    }
 
     return {
         calcFunction : function(formValues){
+            var weight = formValues.weight;
+            var height = formValues.height;
+            var hgtUnit = formValues.heightUnit;
+            var wgtUnit = formValues.weightUnit;
+            [hgtVar, wgtVar] = checkUnits(hgtUnit,wgtUnit);
             if (formValuesCheck(formValues)===true){
-                var bmi = Math.round(10000*formValues.weight/Math.pow(formValues.height,2));
+                var bmi = Math.round(10000*(weight/wgtVar)/Math.pow((height/hgtVar),2));
                 return [bmi,'unit']
             } else {
                 return [0,'unit', formValuesCheck(formValues)]
@@ -48,9 +65,9 @@ var UIcontroller = (function(){
         return {
         // FORM INPUT
         heightValue : document.querySelector('#height-inp'),
-        heightUnit : document.querySelector('#height-opt'),
+        heightUnit : document.querySelector('#height-unit'),
         weightValue : document.querySelector('#weight-inp'),
-        heightUnit : document.querySelector('#weight-opt'),
+        weightUnit : document.querySelector('#weight-unit'),
         ageValue : document.querySelector('#age-inp'),
         activity : document.querySelector('#activity-inp'),
         goal : document.querySelector('#goal-inp'),
@@ -67,6 +84,13 @@ var UIcontroller = (function(){
         resultUnit : document.querySelector('#calc-result-unit')
         }
     }
+    
+    // adding red focus on the invalid input class
+    var add_invalid_el = function(el){
+        invalid_el = domValues()[el+'Value'];
+        invalid_el.classList.add("form-red-input");
+        invalid_el.focus();
+    }
 
     return {
         dom : domValues(),
@@ -75,7 +99,7 @@ var UIcontroller = (function(){
             this.dom.resultValue.innerHTML = valArr[0];
             this.dom.resultUnit.innerHTML = valArr[1];
             if (valArr[2]){
-                this.dom[valArr[2]+'Value'].classList.add("form-red-input");
+                add_invalid_el(valArr[2]);
             }
         },
     };
@@ -101,7 +125,9 @@ var controller = (function(dataCalc, UIctrl){
         // GETTING THE FORM VALUES
         var formValues =  {
             height : dom.heightValue.value,
+            heightUnit : dom.heightUnit.value,
             weight : dom.weightValue.value,
+            weightUnit: dom.weightUnit.value,
             age : dom.ageValue.value,
             activity : dom.activity.value,
             goal : dom.goal.value,
