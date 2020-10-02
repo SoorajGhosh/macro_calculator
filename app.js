@@ -16,12 +16,14 @@ var dataCalculator = (function(){
 
     function checkUnits(hgtUnt,wgtUnt){
         var hgtConst, wgtConst;
+
         // Checking the Height Unit
         if (hgtUnt === 'cms'){
             hgtConst = 1;
         } else if (hgtUnt === 'inch'){
             hgtConst = 0.39;
         }
+
         // Checking the Wight Unit
         if (wgtUnt === 'kgs'){
             wgtConst = 1;
@@ -92,6 +94,10 @@ var UIcontroller = (function(){
         invalid_el.focus();
     }
 
+    var showResultMethods = function(){
+        allResultMethods.style.display = 'block';
+    }
+
     return {
         dom : domValues(),
 
@@ -102,6 +108,21 @@ var UIcontroller = (function(){
                 add_invalid_el(valArr[2]);
             }
         },
+
+        showResultMethods : function(){
+            results = this.dom.allResultMethods;
+            // results.forEach(showResult);
+            // function showResult(item,index){
+            //     item.style.display = 'inline-block';
+            // }
+            function showResult(res_el){
+                res_el.style.display = 'inline-block';
+            }
+            for (let index = 0; index < results.length; index++) {
+                // const element = results[index];   
+                setInterval(function(){showResult(results[index])},3000)
+            }
+        }
     };
 })();
 
@@ -134,6 +155,8 @@ var controller = (function(dataCalc, UIctrl){
             gender : dom.gender.value
         };
 
+        // DISPLAY THE RESULT METHODS
+        UIctrl.showResultMethods();
         
         // SENDING THE FORM VALUES TO THE DATA CONTROLLER AND RECIEVING THE RESULT OUTPUT ARRAY
         var resultArr = dataCalc.calcFunction(formValues);
