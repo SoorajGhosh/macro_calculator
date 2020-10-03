@@ -74,12 +74,13 @@ var UIcontroller = (function(){
         calcBtn : document.querySelector('#calc-btn'),
         clearBtn : document.querySelector("#clear-btn"),
         // RESULT METHODs
+        resultMethods : document.querySelector('.result-methods'),
         allResultMethods : document.querySelectorAll('.result-method'),
-        activeElement : document.activeElement,
         bmi : document.querySelector('#bmi'),
         // RESULT
         resultValue : document. querySelector('#calc-result-value'),
-        resultUnit : document.querySelector('#calc-result-unit')
+        resultUnit : document.querySelector('#calc-result-unit'),
+        shownResult : document.getElementById('shown-result-category')
         }
     }
     
@@ -97,12 +98,11 @@ var UIcontroller = (function(){
     return {
         dom : domValues(),
 
+        add_invalid_el : add_invalid_el,
+
         resultDisplay : function(valArr){
             this.dom.resultValue.innerHTML = valArr[0];
             this.dom.resultUnit.innerHTML = valArr[1];
-            if (valArr[2]){
-                add_invalid_el(valArr[2]);
-            }
         },
 
         resultMethodsDisplay : function(displayType){
@@ -112,11 +112,11 @@ var UIcontroller = (function(){
                   
                 var showingVal = results[n].style.display = displayType;    
               
-                if(n < results.length) {
+                if(n < results.length-1) {
                   setTimeout(function() { showResult(n + 1); }, 500);
                 }
             }
-            setTimeout(showResult, 500);
+            setTimeout(showResult, 1000);
         }
     };
 })();
@@ -166,17 +166,17 @@ var controller = (function(dataCalc, UIctrl){
             UIctrl.resultMethodsDisplay('inline-block');
             // SENDING THE FORM VALUES TO THE DATA CONTROLLER AND RECIEVING THE RESULT OUTPUT ARRAY
             var resultArr = dataCalc.calcFunction(formValues);
+            // SETTING THE RESULT IN THE UI
+            UIctrl.resultDisplay(resultArr);
         } else {
-            var resultArr = [0,'unit', formValuesCheck(formValues)]
+            UIctrl.add_invalid_el(formValuesCheck(formValues));
         }
 
-        // SETTING THE RESULT IN THE UI
-        UIctrl.resultDisplay(resultArr);
     }
     
     var clearFunc = function(){
-        UIctrl.resultMethodsDisplay('none');    // hiding the result methods
-        dom.heightValue.value ='';
+        UIctrl.resultMethodsDisplay('none');    // Hiding the result methods
+        dom.heightValue.value ='';              // Deleting values from form
         dom.heightUnit.value = 'cms';
         dom.weightValue.value = '';
         dom.weightUnit.value = 'kgs';
@@ -186,10 +186,21 @@ var controller = (function(dataCalc, UIctrl){
         dom.gender.value = 'male';
         dom.resultValue.innerHTML = 0;
         dom.resultUnit.innerHTML = 'unit';
+        dom.shownResult.innerHTML = 'BMI'
     }
     
+    var checkEvent = function(event){
+        var target_el = event.target;
+        if (target_el.className === dom.allResultMethods[0].className){
+            target_el_id = target_el.id;
+            dom.shownResult.innerHTML = target_el.innerHTML;
+            dom.shownResult.style.textTransform="uppercase"
+        }
+    }
+
     dom.calcBtn.addEventListener('click', main);
     dom.clearBtn.addEventListener('click', clearFunc);
+    dom.resultMethods.addEventListener('click',checkEvent);
     
     // THE CODE BELOW THE BUTTON CLICK ONLY HAAPENS AFTER THE BUTTON IS CLICKED
 
