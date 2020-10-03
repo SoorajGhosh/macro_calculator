@@ -40,12 +40,8 @@ var dataCalculator = (function(){
             var hgtUnit = formValues.heightUnit;
             var wgtUnit = formValues.weightUnit;
             [hgtVar, wgtVar] = checkUnits(hgtUnit,wgtUnit);
-            if (formValuesCheck(formValues)===true){
-                var bmi = Math.round(10000*(weight/wgtVar)/Math.pow((height/hgtVar),2));
-                return [bmi,'unit']
-            } else {
-                return [0,'unit', formValuesCheck(formValues)]
-            }
+            var bmi = Math.round(10000*(weight/wgtVar)/Math.pow((height/hgtVar),2));
+            return [bmi,'unit']
         },
     };
 })();
@@ -109,19 +105,18 @@ var UIcontroller = (function(){
             }
         },
 
-        showResultMethods : function(){
+        resultMethodsDisplay : function(displayType){
             results = this.dom.allResultMethods;
-            // results.forEach(showResult);
-            // function showResult(item,index){
-            //     item.style.display = 'inline-block';
-            // }
-            function showResult(res_el){
-                res_el.style.display = 'inline-block';
+            function showResult(n) {
+                if(!n){n = 0;}
+                  
+                var showingVal = results[n].style.display = displayType;    
+              
+                if(n < results.length) {
+                  setTimeout(function() { showResult(n + 1); }, 500);
+                }
             }
-            for (let index = 0; index < results.length; index++) {
-                // const element = results[index];   
-                setInterval(function(){showResult(results[index])},3000)
-            }
+            setTimeout(showResult, 500);
         }
     };
 })();
@@ -155,36 +150,62 @@ var controller = (function(dataCalc, UIctrl){
             gender : dom.gender.value
         };
 
-        // DISPLAY THE RESULT METHODS
-        UIctrl.showResultMethods();
         
-        // SENDING THE FORM VALUES TO THE DATA CONTROLLER AND RECIEVING THE RESULT OUTPUT ARRAY
-        var resultArr = dataCalc.calcFunction(formValues);
+        // Check if all values are present
+        function formValuesCheck(obj){
+            for (var item in obj){
+                if (!obj[item]){
+                    return item
+                }
+            }
+            return true
+        }
+
+        if (formValuesCheck(formValues)===true){
+            // DISPLAY THE RESULT METHODS
+            UIctrl.resultMethodsDisplay('inline-block');
+            // SENDING THE FORM VALUES TO THE DATA CONTROLLER AND RECIEVING THE RESULT OUTPUT ARRAY
+            var resultArr = dataCalc.calcFunction(formValues);
+        } else {
+            var resultArr = [0,'unit', formValuesCheck(formValues)]
+        }
 
         // SETTING THE RESULT IN THE UI
         UIctrl.resultDisplay(resultArr);
     }
     
     var clearFunc = function(){
+        UIctrl.resultMethodsDisplay('none');    // hiding the result methods
+        dom.heightValue.value ='';
+        dom.heightUnit.value = 'cms';
+        dom.weightValue.value = '';
+        dom.weightUnit.value = 'kgs';
+        dom.ageValue.value = '';
+        dom.activity.value = 'no';
+        dom.goal.value = 'maintain';
+        dom.gender.value = 'male';
         dom.resultValue.innerHTML = 0;
         dom.resultUnit.innerHTML = 'unit';
     }
-    // var clearRedFocus = function(){}
-
+    
     dom.calcBtn.addEventListener('click', main);
     dom.clearBtn.addEventListener('click', clearFunc);
     
-    // Removing any form-red-input class
-    dom.heightValue.addEventListener('change', function(){
-        dom.heightValue.classList.remove('form-red-input');
-    });
-    dom.weightValue.addEventListener('change', function(){
-        dom.weightValue.classList.remove('form-red-input');
-    });
-    dom.ageValue.addEventListener('change', function(){
-        dom.ageValue.classList.remove('form-red-input');
-    })
+    // THE CODE BELOW THE BUTTON CLICK ONLY HAAPENS AFTER THE BUTTON IS CLICKED
 
+    // Removing any form-red-input class
+    (function removeInvalid(){
+        dom.heightValue.addEventListener('change', function(){
+            dom.heightValue.classList.remove('form-red-input');
+        });
+        dom.weightValue.addEventListener('change', function(){
+            dom.weightValue.classList.remove('form-red-input');
+        });
+        dom.ageValue.addEventListener('change', function(){
+            dom.ageValue.classList.remove('form-red-input');
+        })
+    })();
+    
 })(dataCalculator, UIcontroller);
 
 
