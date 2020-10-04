@@ -70,7 +70,7 @@ var dataCalculator = (function(){
         var maintenance_cal_unit = 'kcal/day';
         var body_fat_perc_val = (1.20 * bmi_val) + (0.23 * form_val.age) - genderBodyFatPerc;
         var body_fat_perc_unit = '%';
-        var lean_body_weight_val = weight-(body_fat_perc_val*weight/100);
+        var lean_body_weight_val = weight-body_fat_perc_val;        // (body_fat_perc_val*weight/100)
         var lean_body_weight_unit = form_val.weightUnit;
         
         return {
@@ -79,7 +79,10 @@ var dataCalculator = (function(){
             maintenance_cal : [getDoubleDecimal(maintenance_cal_val), maintenance_cal_unit],
             body_fat_perc : [getDoubleDecimal(body_fat_perc_val), body_fat_perc_unit],
             lean_body_weight : [getDoubleDecimal(lean_body_weight_val), lean_body_weight_unit],
-            daily_calorie : [goalConst+getDoubleDecimal(maintenance_cal_val), maintenance_cal_unit]
+            daily_calorie : [goalConst+getDoubleDecimal(maintenance_cal_val), maintenance_cal_unit],
+            protein : [0, 'unit'],
+            carb : [0, 'unit'],
+            fat : [0, 'unit']
         }
     }
 
@@ -112,6 +115,7 @@ var UIcontroller = (function(){
         resultMethods : document.querySelector('.result-methods'),
         allResultMethods : document.querySelectorAll('.result-method'),
         // MACROS
+        macros : document.querySelector('.macros'),
         allMacros : document.querySelectorAll('.macro'),
         // RESULT
         resultValue : document. querySelector('#calc-result-value'),
@@ -218,6 +222,7 @@ var controller = (function(dataCalc, UIctrl){
     
     var checkResultType = function(event){
         var target_el = event.target;
+        console.log(target_el.id, target_el.parentNode.id);
         if (target_el.className === dom.allResultMethods[0].className){
             dom.shownResult.innerHTML = target_el.innerHTML;
             dom.shownResult.style.textTransform="uppercase";
@@ -225,12 +230,20 @@ var controller = (function(dataCalc, UIctrl){
             if (target_el.id === 'daily_calorie'){
                 UIctrl.elementsDisplayChange(dom.allMacros, 'block');
             }
+        } else if (target_el.className === dom.allMacros[0].className || target_el.parentNode.className === dom.allMacros[0].className){
+            if (target_el.parentNode.className === dom.allMacros[0].className){
+                target_el = target_el.parentNode
+            }
+            dom.shownResult.innerHTML = target_el.id;
+            dom.shownResult.style.textTransform="uppercase";
+            UIctrl.resultDisplay(resultObj[target_el.id]);
         }
     }
 
     dom.calcBtn.addEventListener('click', main);
     dom.clearBtn.addEventListener('click', clearFunc);
     dom.resultMethods.addEventListener('click',checkResultType);
+    dom.macros.addEventListener('click',checkResultType);
     
     // THE CODE BELOW THE BUTTON CLICK ONLY HApPENS AFTER THE BUTTON IS CLICKED
 
