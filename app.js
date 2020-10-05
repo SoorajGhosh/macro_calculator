@@ -20,14 +20,19 @@ var dataCalculator = (function(){
         // Checking the Activity Unit
         if (activity === 'no'){
             activityConst = 1.2;
+            proteinConst = 0.8;
         } else if (activity === 'little'){
             activityConst = 1.35;
+            proteinConst = 0.8;
         } else if (activity === 'moderate'){
             activityConst = 1.5;
+            proteinConst = 0.8;
         } else if (activity === 'intense'){
             activityConst = 1.6;
+            proteinConst = 0.8;
         } else if (activity === 'hard'){
             activityConst = 1.75;
+            proteinConst = 0.8;
         }
 
         // Checking the Goal Unit
@@ -48,7 +53,7 @@ var dataCalculator = (function(){
             genderBodyFatPerc = 5.4
         }
 
-        return [hgtConst, wgtConst, activityConst, goalConst, genderBMRConst, genderBodyFatPerc]
+        return [hgtConst, wgtConst, activityConst, goalConst, genderBMRConst, genderBodyFatPerc, proteinConst]
     }
 
     function getDoubleDecimal(val){
@@ -56,7 +61,7 @@ var dataCalculator = (function(){
     }
 
     function calculate(form_val){
-        [hgtVar, wgtVar, activityConst, goalConst, genderBMRConst, genderBodyFatPerc] = getConstants(form_val.heightUnit,form_val.weightUnit,
+        [hgtVar, wgtVar, activityConst, goalConst, genderBMRConst, genderBodyFatPerc, proteinConst] = getConstants(form_val.heightUnit,form_val.weightUnit,
                                         form_val.activity, form_val.goal, form_val.gender, 
                                     );
         var weight = (form_val.weight)/wgtVar;
@@ -72,6 +77,8 @@ var dataCalculator = (function(){
         var body_fat_perc_unit = '%';
         var lean_body_weight_val = weight-body_fat_perc_val;        // (body_fat_perc_val*weight/100)
         var lean_body_weight_unit = form_val.weightUnit;
+        var protein_val = weight*proteinConst;
+        var food_unit = 'gms'
         
         return {
             bmi : [getDoubleDecimal(bmi_val), bmi_unit],
@@ -80,9 +87,9 @@ var dataCalculator = (function(){
             body_fat_perc : [getDoubleDecimal(body_fat_perc_val), body_fat_perc_unit],
             lean_body_weight : [getDoubleDecimal(lean_body_weight_val), lean_body_weight_unit],
             daily_calorie : [goalConst+getDoubleDecimal(maintenance_cal_val), maintenance_cal_unit],
-            protein : [0, 'unit'],
-            carb : [0, 'unit'],
-            fat : [0, 'unit']
+            protein : [0, food_unit],
+            carb : [0, food_unit],
+            fat : [0, food_unit]
         }
     }
 
@@ -160,7 +167,7 @@ var UIcontroller = (function(){
 
 
 var controller = (function(dataCalc, UIctrl){
-    var formValues, resultObj;
+    var formValues, resultObj, invalidField, pressedEvent;
     /*
     1. Get the Field Input Data
     2. Add the data to the DataCalculator
@@ -169,8 +176,18 @@ var controller = (function(dataCalc, UIctrl){
     */
     var dom = UIctrl.dom;
     
+    // Check if all values are present
+    function formValuesCheck(obj){
+        for (var item in obj){
+            if (!obj[item]){
+                invalidField = item
+                return false
+            }
+        }
+        return true
+    }
 
-    var main = function(){
+    var calculateAndShow = function(){
 
         // SETTING AND GETTING THE FORM VALUES
         formValues =  {
@@ -184,30 +201,24 @@ var controller = (function(dataCalc, UIctrl){
             gender : dom.gender.value
         };
 
-        
-        // Check if all values are present
-        function formValuesCheck(obj){
-            for (var item in obj){
-                if (!obj[item]){
-                    return item
-                }
-            }
-            return true
-        }
-
-        if (formValuesCheck(formValues)===true){
+        if (formValuesCheck(formValues)){
             UIctrl.elementsDisplayChange(dom.allResultMethods, 'inline-block');    // DISPLAY THE RESULT METHODS
-            resultObj = dataCalc.resultObj(formValues);     // SENDING THE FORM VALUES TO THE DATA CONTROLLER AND RECIEVING THE RESULT OUTPUT ARRAY
-            UIctrl.resultDisplay(resultObj.bmi);            // SETTING THE RESULT IN THE UI
+            resultObj = dataCalc.resultObj(formValues);                            // SENDING THE FORM VALUES TO THE DATA CONTROLLER AND RECIEVING THE RESULT OUTPUT ARRAY
+            if (pressedEvent){
+                checkResultType(pressedEvent);
+            } else{
+                UIctrl.resultDisplay(resultObj.bmi);                                   // SETTING THE RESULT IN THE UI
+            }
         } else {
-            UIctrl.add_invalid_el(formValuesCheck(formValues));
+            UIctrl.add_invalid_el(invalidField);
+            invalidField=undefined;
         }
-
     }
     
     var clearFunc = function(){
-        UIctrl.elementsDisplayChange(dom.allResultMethods,'none');    // Hiding the result methods
-        dom.heightValue.value ='';              // Deleting values from form
+        UIctrl.elementsDisplayChange(dom.allResultMethods,'none');      // Hiding the result methods
+        UIctrl.elementsDisplayChange(dom.allMacros,'none');             // Hiding the macro
+        dom.heightValue.value ='';                                      // Deleting values from form
         dom.heightUnit.value = 'cms';
         dom.weightValue.value = '';
         dom.weightUnit.value = 'kgs';
@@ -215,14 +226,18 @@ var controller = (function(dataCalc, UIctrl){
         dom.activity.value = 'no';
         dom.goal.value = 'maintain';
         dom.gender.value = 'male';
-        dom.resultValue.innerHTML = 0;          // Setting default in results
+        dom.resultValue.innerHTML = 0;                                  // Setting default in results
         dom.resultUnit.innerHTML = 'unit';
-        dom.shownResult.innerHTML = 'BMI'
+        dom.shownResult.innerHTML = 'BMI';
+        pressedEvent = undefined;                                       // Setting global Variables to undefined again
+        formValues = undefined;
+        resultObj = undefined;
+        invalidField = undefined;
     }
     
     var checkResultType = function(event){
         var target_el = event.target;
-        console.log(target_el.id, target_el.parentNode.id);
+        pressedEvent = event;
         if (target_el.className === dom.allResultMethods[0].className){
             dom.shownResult.innerHTML = target_el.innerHTML;
             dom.shownResult.style.textTransform="uppercase";
@@ -240,11 +255,32 @@ var controller = (function(dataCalc, UIctrl){
         }
     }
 
-    dom.calcBtn.addEventListener('click', main);
+    var updateVal = function(){
+        // Checking if FromValues are set
+        if (formValues){
+            // Checking if formvalues are set then are all of them valid or some are undefined, if undefined the below function is not executed
+            if (formValuesCheck(formValues)){
+                calculateAndShow();
+            }
+        }
+    }
+
+    dom.calcBtn.addEventListener('click', calculateAndShow);
     dom.clearBtn.addEventListener('click', clearFunc);
     dom.resultMethods.addEventListener('click',checkResultType);
     dom.macros.addEventListener('click',checkResultType);
     
+    // Updating Result if any form value is changed
+    dom.heightValue.addEventListener("input", updateVal);        // input : the function is triggered immediately 
+    dom.heightUnit.addEventListener("input", updateVal);
+    dom.weightValue.addEventListener("input", updateVal);
+    dom.weightUnit.addEventListener("input", updateVal);
+    dom.ageValue.addEventListener("input", updateVal);
+    dom.activity.addEventListener("input", updateVal);
+    dom.goal.addEventListener("input", updateVal);
+    dom.gender.addEventListener("input", updateVal);
+    
+
     // THE CODE BELOW THE BUTTON CLICK ONLY HApPENS AFTER THE BUTTON IS CLICKED
 
     // Removing any form-red-input class
