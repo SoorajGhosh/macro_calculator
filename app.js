@@ -1,7 +1,12 @@
+
+
+
+// ============================== CONTROLS THE DATA CALCULATIONS FUNCTIONS ======================================
+
 var dataCalculator = (function(){
 
     function getConstants(hgtUnt,wgtUnt, activity, goal, gender){
-        var hgtConst, wgtConst, activityConst, goalConst, genderBMRConst, genderBodyFatPerc;
+        var hgtConst, wgtConst, activityConst, goalConst, genderBMRConst, lbm_height_const, lbm_weight_const, lbm_const;
 
         // Checking the Height Unit
         if (hgtUnt === 'cms'){
@@ -33,6 +38,9 @@ var dataCalculator = (function(){
         } else if (activity === 'hard'){
             activityConst = 1.75;
             proteinConst = 0.8;
+        } else if (activity === 'very_hard'){
+            activityConst = 1.9;
+            proteinConst = 0.8;
         }
 
         // Checking the Goal Unit
@@ -47,46 +55,54 @@ var dataCalculator = (function(){
         // Checking the Gender Unit
         if (gender === 'male'){
             genderBMRConst = 5;
-            genderBodyFatPerc = 16.2
+            lbm_height_const = 0.267;
+            lbm_weight_const = 0.407;
+            lbm_const = 19.2;
         } else if (gender === 'female'){
             genderBMRConst = -161;
-            genderBodyFatPerc = 5.4
+            lbm_height_const = 0.473;
+            lbm_weight_const = 0.252;   
+            lbm_const = 48.3;
         }
 
-        return [hgtConst, wgtConst, activityConst, goalConst, genderBMRConst, genderBodyFatPerc, proteinConst]
-    }
-
-    function getDoubleDecimal(val){
-        return (Math.round(val*100))/100;
+        return {
+                hgtConst:hgtConst, 
+                wgtConst:wgtConst, 
+                activityConst:activityConst, 
+                goalConst:goalConst, 
+                genderBMRConst:genderBMRConst, 
+                lbm_weight_const:lbm_weight_const,
+                lbm_height_const:lbm_height_const,
+                lbm_const:lbm_const,
+                proteinConst:proteinConst
+            }
     }
 
     function calculate(form_val){
-        [hgtVar, wgtVar, activityConst, goalConst, genderBMRConst, genderBodyFatPerc, proteinConst] = getConstants(form_val.heightUnit,form_val.weightUnit,
-                                        form_val.activity, form_val.goal, form_val.gender, 
-                                    );
-        var weight = (form_val.weight)/wgtVar;
-        var height = (form_val.height)/hgtVar;
+        var constants = getConstants(form_val.heightUnit, form_val.weightUnit, form_val.activity, form_val.goal, form_val.gender);
+        var weight = (form_val.weight)/constants.wgtConst;
+        var height = (form_val.height)/constants.hgtConst;
         var age = (form_val.age);
         var bmi_val = Math.round(10000*weight/Math.pow(height,2));
         var bmi_unit = 'unit';
-        var bmr_val = (10 * weight) + (6.25 * height) - (5 * age)  + genderBMRConst;
+        var bmr_val = (10 * weight) + (6.25 * height) - (5 * age)  + constants.genderBMRConst;
         var bmr_unit = 'kcal/day';
-        var maintenance_cal_val = bmr_val*activityConst;
+        var maintenance_cal_val = bmr_val*constants.activityConst;
         var maintenance_cal_unit = 'kcal/day';
-        var body_fat_perc_val = (1.20 * bmi_val) + (0.23 * form_val.age) - genderBodyFatPerc;
+        var lean_body_mass_val = (constants.lbm_weight_const*weight) + (constants.lbm_height_const*height) - constants.lbm_const;
+        var lean_body_mass_unit = form_val.weightUnit;
+        var body_fat_perc_val = ((weight-lean_body_mass_val)/weight)*100;
         var body_fat_perc_unit = '%';
-        var lean_body_weight_val = weight-body_fat_perc_val;        // (body_fat_perc_val*weight/100)
-        var lean_body_weight_unit = form_val.weightUnit;
-        var protein_val = weight*proteinConst;
+        var protein_val = weight*constants.proteinConst;
         var food_unit = 'gms'
         
         return {
-            bmi : [getDoubleDecimal(bmi_val), bmi_unit],
-            bmr : [getDoubleDecimal(bmr_val), bmr_unit],
-            maintenance_cal : [getDoubleDecimal(maintenance_cal_val), maintenance_cal_unit],
-            body_fat_perc : [getDoubleDecimal(body_fat_perc_val), body_fat_perc_unit],
-            lean_body_weight : [getDoubleDecimal(lean_body_weight_val), lean_body_weight_unit],
-            daily_calorie : [goalConst+getDoubleDecimal(maintenance_cal_val), maintenance_cal_unit],
+            bmi : [bmi_val, bmi_unit],
+            bmr : [bmr_val, bmr_unit],
+            maintenance_cal : [maintenance_cal_val, maintenance_cal_unit],
+            body_fat_perc : [body_fat_perc_val, body_fat_perc_unit],
+            lean_body_weight : [lean_body_mass_val, lean_body_mass_unit],
+            daily_calorie : [maintenance_cal_val, maintenance_cal_unit],
             protein : [0, food_unit],
             carb : [0, food_unit],
             fat : [0, food_unit]
@@ -101,6 +117,8 @@ var dataCalculator = (function(){
 
 
 
+
+// ============================== CONTROLS THE UI FUNCTIONS ======================================
 
 var UIcontroller = (function(){
 
@@ -131,6 +149,20 @@ var UIcontroller = (function(){
         }
     }
 
+    function improvingValue(val){
+        var value = val.toFixed(2);                                                     //Rounding up the value to only 2 decimal points
+        var valSplit = value.split('.');
+        var int = valSplit[0];
+        var dec = valSplit[1];
+        if (int.length>3){
+            int = int.substr(0,int.length-3) + ',' + int.substr(int.length-3,3);        // 1074 ==> 1,074
+            value = int
+        } else {
+            value = int +'.' + dec;                                                     //20 + . + 42 ==> 20.42
+        }
+        return value
+    }
+
     return {
         dom : domValues(),
 
@@ -143,21 +175,21 @@ var UIcontroller = (function(){
 
         // Updating and Displaying Results
         resultDisplay : function(valArr){
-            this.dom.resultValue.innerHTML = valArr[0];
-            this.dom.resultUnit.innerHTML = valArr[1];
+            resultVal = improvingValue(valArr[0]);          // Updating the value with ',' and floating points
+            this.dom.resultValue.innerHTML = resultVal;     // Value
+            this.dom.resultUnit.innerHTML = valArr[1];      // Unit
         },
 
         // Changing Display type of elements
         elementsDisplayChange : function(displayItems, displayType){
-            // results = this.dom.allResultMethods;
             function showResult(n) {
                 if(!n){n = 0;}
-                var showingVal = displayItems[n].style.display = displayType;
+                displayItems[n].style.display = displayType;
                 if(n < displayItems.length-1) {
-                  setTimeout(function() { showResult(n + 1); }, 1000);
+                  setTimeout(function() { showResult(n + 1); }, 500);
                 }
             }
-            setTimeout(showResult, 1000);
+            setTimeout(showResult, 500);
         }
     };
 })();
@@ -165,6 +197,9 @@ var UIcontroller = (function(){
 
 
 
+
+
+// ============================== CONTROLS THE BASIC FUNCTIONS ======================================
 
 var controller = (function(dataCalc, UIctrl){
     var formValues, resultObj, invalidField, pressedEvent;
@@ -207,7 +242,7 @@ var controller = (function(dataCalc, UIctrl){
             if (pressedEvent){
                 checkResultType(pressedEvent);
             } else{
-                UIctrl.resultDisplay(resultObj.bmi);                                   // SETTING THE RESULT IN THE UI
+                UIctrl.resultDisplay(resultObj.bmi);                               // SETTING THE RESULT IN THE UI
             }
         } else {
             UIctrl.add_invalid_el(invalidField);
