@@ -111,6 +111,14 @@
 	width: 16.5%;
 }
 
+.goal-input {
+	margin-right: 0;
+	margin-bottom: 0px;
+	margin-top: 0px;
+	display: inline-block;
+	width: 21.6%;
+}
+
 .form-btn{
 	position: relative;
 	margin: 10px 15px 0px 20px;
@@ -319,6 +327,14 @@
 		font-size: 0.8em;
 	}
 
+	.goal-input {
+		margin-right: 0;
+		margin-bottom: 0px;
+		margin-top: 0px;
+		display: inline-block;
+		width: 20.9%;
+	}
+	
 	.form-btn{
 		display: inline-block;
 		width: 45%;

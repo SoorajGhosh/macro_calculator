@@ -131,7 +131,10 @@ var UIcontroller = (function(){
         weightUnit : document.querySelector('#weight-unit'),
         ageValue : document.querySelector('#age-inp'),
         activity : document.querySelector('#activity-inp'),
-        goal : document.querySelector('#goal-inp'),
+        goal_weight_dif : document.querySelector('#weight-dif-inp'),
+        goal_target : document.querySelector('#target-inp'),
+        goal_time_span : document.querySelector('#time-span-inp'),
+        goal_time_period : document.querySelector('#time-period-inp'),
         gender : document.querySelector('#gender-inp'),
         // BUTTON
         calcBtn : document.querySelector('#calc-btn'),
@@ -232,7 +235,10 @@ var controller = (function(dataCalc, UIctrl){
             weightUnit: dom.weightUnit.value,
             age : dom.ageValue.value,
             activity : dom.activity.value,
-            goal : dom.goal.value,
+            goal_weight_dif : dom.goal_weight_dif.value,
+            goal_target : dom.goal_target.value,
+            goal_time_span : dom.goal_time_span.value,
+            goal_time_period : dom.goal_time_period.value,
             gender : dom.gender.value
         };
 
@@ -243,6 +249,7 @@ var controller = (function(dataCalc, UIctrl){
                 checkResultType(pressedEvent);
             } else{
                 UIctrl.resultDisplay(resultObj.bmi);                               // SETTING THE RESULT IN THE UI
+                console.log(formValues);
             }
         } else {
             UIctrl.add_invalid_el(invalidField);
@@ -312,7 +319,7 @@ var controller = (function(dataCalc, UIctrl){
     dom.weightUnit.addEventListener("input", updateVal);
     dom.ageValue.addEventListener("input", updateVal);
     dom.activity.addEventListener("input", updateVal);
-    dom.goal.addEventListener("input", updateVal);
+    // dom.goal.addEventListener("input", updateVal);
     dom.gender.addEventListener("input", updateVal);
     
 

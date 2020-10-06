@@ -44,11 +44,20 @@
 				</select>
 
 				<label class='form-label' for="goal">Goal</label>
-				<select class='form-input'name="goal" id="goal-inp">
-					<option value="maintain">Maintain</option>
-					<option value="gain">Gain</option>
-					<option value="loss">Loss</option>
-				</select>
+				<div class="var-input">
+					<input class='form-input goal-input' id="weight-dif-inp" type="number" name="weight-dif-inp" placeholder="1 kg">
+					<select class='form-input goal-input' name="target" id="target-inp">
+						<option value="maintain">Maintain</option>
+						<option value="gain">Gain</option>
+						<option value="loss">Loss</option>
+					</select>
+					<input class='form-input goal-input' id="time-span-inp" type="number" name="time-span-inp" placeholder="1">
+					<select class='form-input goal-input' name="time-period" id="time-period-inp">
+						<option value="week">Week</option>
+						<option value="month">Month</option>
+						<option value="year">Year</option>
+					</select>
+				</div>
 
 				<label class='form-label' for="gender">Gender</label>
 				<select class='form-input'name="gender" id="gender-inp">
