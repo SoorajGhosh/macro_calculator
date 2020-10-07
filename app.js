@@ -5,60 +5,72 @@
 
 var dataCalculator = (function(){
 
-    function getConstants(hgtUnt,wgtUnt, activity, goal, gender){
+    function getConstants(form_vals){
         var hgtConst, wgtConst, activityConst, goalConst, genderBMRConst, lbm_height_const, lbm_weight_const, lbm_const;
 
         // Checking the Height Unit
-        if (hgtUnt === 'cms'){
+        if (form_vals.heightUnit === 'cms'){
             hgtConst = 1;
-        } else if (hgtUnt === 'inch'){
+        } else if (form_vals.heightUnit === 'inch'){
             hgtConst = 0.39;
         }
 
         // Checking the Wight Unit
-        if (wgtUnt === 'kgs'){
+        if (form_vals.weightUnit === 'kgs'){
             wgtConst = 1;
-        } else if (wgtUnt === 'lbs'){
+            goalCalorieConst = 7700;
+        } else if (form_vals.weightUnit === 'lbs'){
             wgtConst = 2.2;
+            goalCalorieConst = 3500;
         }
 
         // Checking the Activity Unit
-        if (activity === 'no'){
+        if (form_vals.activity === 'no'){
             activityConst = 1.2;
             proteinConst = 0.8;
-        } else if (activity === 'little'){
+        } else if (form_vals.activity === 'little'){
             activityConst = 1.35;
             proteinConst = 0.8;
-        } else if (activity === 'moderate'){
+        } else if (form_vals.activity === 'moderate'){
             activityConst = 1.5;
             proteinConst = 0.8;
-        } else if (activity === 'intense'){
+        } else if (form_vals.activity === 'intense'){
             activityConst = 1.6;
             proteinConst = 0.8;
-        } else if (activity === 'hard'){
+        } else if (form_vals.activity === 'hard'){
             activityConst = 1.75;
             proteinConst = 0.8;
-        } else if (activity === 'very_hard'){
+        } else if (form_vals.activity === 'very_hard'){
             activityConst = 1.9;
             proteinConst = 0.8;
         }
 
         // Checking the Goal Unit
-        if (goal === 'maintain'){
-            goalConst = '=';
-        } else if (goal === 'gain'){
-            goalConst = '>';
-        } else if (goal === 'loss'){
-            goalConst = '<';
+        if (form_vals.goal_target === 'maintain'){
+            goalTargetConst = '';
+            goalCalorieConst = 0;
+        } else if (form_vals.goal_target === 'gain'){
+            goalTargetConst = '+';
+        } else if (form_vals.goal_target === 'loss'){
+            goalTargetConst = '-';
+        }
+
+        // Checking the Goal Unit
+        if (form_vals.goal_time_period === 'week'){
+            goalTimePeriodConst = 7;
+        } else if (form_vals.goal_time_period === 'month'){
+            goalTimePeriodConst = 30;
+        } else if (form_vals.goal_time_period === 'year'){
+            goalTimePeriodConst = 365;
         }
 
         // Checking the Gender Unit
-        if (gender === 'male'){
+        if (form_vals.gender === 'male'){
             genderBMRConst = 5;
             lbm_height_const = 0.267;
             lbm_weight_const = 0.407;
             lbm_const = 19.2;
-        } else if (gender === 'female'){
+        } else if (form_vals.gender === 'female'){
             genderBMRConst = -161;
             lbm_height_const = 0.473;
             lbm_weight_const = 0.252;   
@@ -66,23 +78,29 @@ var dataCalculator = (function(){
         }
 
         return {
-                hgtConst:hgtConst, 
-                wgtConst:wgtConst, 
-                activityConst:activityConst, 
-                goalConst:goalConst, 
-                genderBMRConst:genderBMRConst, 
-                lbm_weight_const:lbm_weight_const,
-                lbm_height_const:lbm_height_const,
-                lbm_const:lbm_const,
-                proteinConst:proteinConst
+                hgtConst                : hgtConst, 
+                wgtConst                : wgtConst,
+                activityConst           : activityConst, 
+                goalCalorieConst        : goalCalorieConst,
+                goalTargetConst         : goalTargetConst, 
+                goalTimePeriodConst     : goalTimePeriodConst,
+                genderBMRConst          : genderBMRConst, 
+                lbm_weight_const        : lbm_weight_const,
+                lbm_height_const        : lbm_height_const,
+                lbm_const               : lbm_const,
+                proteinConst            : proteinConst
             }
     }
 
     function calculate(form_val){
-        var constants = getConstants(form_val.heightUnit, form_val.weightUnit, form_val.activity, form_val.goal, form_val.gender);
+        var constants = getConstants(form_val);
+        
         var weight = (form_val.weight)/constants.wgtConst;
         var height = (form_val.height)/constants.hgtConst;
         var age = (form_val.age);
+        var goal_weight_dif = form_val.goal_weight_dif;
+        var goal_time_span = (form_val.goal_time_span) ? form_val.goal_time_span : 1;   // if no value is provided default is 1
+
         var bmi_val = Math.round(10000*weight/Math.pow(height,2));
         var bmi_unit = 'unit';
         var bmr_val = (10 * weight) + (6.25 * height) - (5 * age)  + constants.genderBMRConst;
@@ -93,19 +111,22 @@ var dataCalculator = (function(){
         var lean_body_mass_unit = form_val.weightUnit;
         var body_fat_perc_val = ((weight-lean_body_mass_val)/weight)*100;
         var body_fat_perc_unit = '%';
+        var goal_target_calorie = parseInt(constants.goalTargetConst+(constants.goalCalorieConst*goal_weight_dif));
+        var goal_time = (goal_time_span*constants.goalTimePeriodConst);
+        var daily_calorie_intake_val = maintenance_cal_val+(goal_target_calorie/goal_time);
         var protein_val = weight*constants.proteinConst;
         var food_unit = 'gms'
         
         return {
-            bmi : [bmi_val, bmi_unit],
-            bmr : [bmr_val, bmr_unit],
-            maintenance_cal : [maintenance_cal_val, maintenance_cal_unit],
-            body_fat_perc : [body_fat_perc_val, body_fat_perc_unit],
-            lean_body_weight : [lean_body_mass_val, lean_body_mass_unit],
-            daily_calorie : [maintenance_cal_val, maintenance_cal_unit],
-            protein : [0, food_unit],
-            carb : [0, food_unit],
-            fat : [0, food_unit]
+            bmi                 : [bmi_val, bmi_unit],
+            bmr                 : [bmr_val, bmr_unit],
+            maintenance_cal     : [maintenance_cal_val, maintenance_cal_unit],
+            body_fat_perc       : [body_fat_perc_val, body_fat_perc_unit],
+            lean_body_weight    : [lean_body_mass_val, lean_body_mass_unit],
+            daily_calorie       : [daily_calorie_intake_val, maintenance_cal_unit],
+            protein             : [0, food_unit],
+            carb                : [0, food_unit],
+            fat                 : [0, food_unit]
         }
     }
 
@@ -131,10 +152,10 @@ var UIcontroller = (function(){
         weightUnit : document.querySelector('#weight-unit'),
         ageValue : document.querySelector('#age-inp'),
         activity : document.querySelector('#activity-inp'),
-        goal_weight_dif : document.querySelector('#weight-dif-inp'),
-        goal_target : document.querySelector('#target-inp'),
-        goal_time_span : document.querySelector('#time-span-inp'),
-        goal_time_period : document.querySelector('#time-period-inp'),
+        goal_weight_difValue : document.querySelector('#weight-dif-inp'),
+        goal_targetValue : document.querySelector('#target-inp'),
+        goal_time_spanValue : document.querySelector('#time-span-inp'),
+        goal_time_periodValue : document.querySelector('#time-period-inp'),
         gender : document.querySelector('#gender-inp'),
         // BUTTON
         calcBtn : document.querySelector('#calc-btn'),
@@ -214,10 +235,40 @@ var controller = (function(dataCalc, UIctrl){
     */
     var dom = UIctrl.dom;
     
+    var setFormValues = function(domVal){
+        return {
+            height : domVal.heightValue.value,
+            heightUnit : domVal.heightUnit.value,
+            weight : domVal.weightValue.value,
+            weightUnit: domVal.weightUnit.value,
+            age : domVal.ageValue.value,
+            activity : domVal.activity.value,
+            goal_weight_dif : domVal.goal_weight_difValue.value,
+            goal_target : domVal.goal_targetValue.value,
+            goal_time_span : domVal.goal_time_spanValue.value,
+            goal_time_period : domVal.goal_time_periodValue.value,
+            gender : domVal.gender.value
+        }
+    }
+
     // Check if all values are present
     function formValuesCheck(obj){
         for (var item in obj){
-            if (!obj[item]){
+            if (item === 'goal_time_span' || item ==='goal_target'){
+                if (!obj['goal_weight_dif']){
+                    continue
+                } else {
+                    if ((item ==='goal_target' && obj[item]!=='maintain')){
+                        continue
+                    } else if ((item ==='goal_time_span' && obj[item]!=='')){
+                        continue
+                    }
+                    invalidField = item
+                    return false
+                }
+            } else if (item === 'goal_weight_dif'){
+                continue
+            } else if (!obj[item]){
                 invalidField = item
                 return false
             }
@@ -228,19 +279,7 @@ var controller = (function(dataCalc, UIctrl){
     var calculateAndShow = function(){
 
         // SETTING AND GETTING THE FORM VALUES
-        formValues =  {
-            height : dom.heightValue.value,
-            heightUnit : dom.heightUnit.value,
-            weight : dom.weightValue.value,
-            weightUnit: dom.weightUnit.value,
-            age : dom.ageValue.value,
-            activity : dom.activity.value,
-            goal_weight_dif : dom.goal_weight_dif.value,
-            goal_target : dom.goal_target.value,
-            goal_time_span : dom.goal_time_span.value,
-            goal_time_period : dom.goal_time_period.value,
-            gender : dom.gender.value
-        };
+        formValues =  setFormValues(dom);
 
         if (formValuesCheck(formValues)){
             UIctrl.elementsDisplayChange(dom.allResultMethods, 'inline-block');    // DISPLAY THE RESULT METHODS
@@ -249,7 +288,6 @@ var controller = (function(dataCalc, UIctrl){
                 checkResultType(pressedEvent);
             } else{
                 UIctrl.resultDisplay(resultObj.bmi);                               // SETTING THE RESULT IN THE UI
-                console.log(formValues);
             }
         } else {
             UIctrl.add_invalid_el(invalidField);
@@ -266,7 +304,10 @@ var controller = (function(dataCalc, UIctrl){
         dom.weightUnit.value = 'kgs';
         dom.ageValue.value = '';
         dom.activity.value = 'no';
-        dom.goal.value = 'maintain';
+        dom.goal_weight_difValue.value = '';
+        dom.goal_targetValue.value = 'maintain';
+        dom.goal_time_spanValue.value = '';
+        dom.goal_time_periodValue.value = 'week';
         dom.gender.value = 'male';
         dom.resultValue.innerHTML = 0;                                  // Setting default in results
         dom.resultUnit.innerHTML = 'unit';
@@ -319,7 +360,10 @@ var controller = (function(dataCalc, UIctrl){
     dom.weightUnit.addEventListener("input", updateVal);
     dom.ageValue.addEventListener("input", updateVal);
     dom.activity.addEventListener("input", updateVal);
-    // dom.goal.addEventListener("input", updateVal);
+    dom.goal_weight_difValue.addEventListener("input", updateVal);
+    dom.goal_targetValue.addEventListener("input", updateVal);
+    dom.goal_time_spanValue.addEventListener("input", updateVal);
+    dom.goal_time_periodValue.addEventListener("input", updateVal);
     dom.gender.addEventListener("input", updateVal);
     
 
@@ -336,6 +380,16 @@ var controller = (function(dataCalc, UIctrl){
         dom.ageValue.addEventListener('change', function(){
             dom.ageValue.classList.remove('form-red-input');
         })
+        dom.goal_weight_difValue.addEventListener('change', function(){
+            dom.goal_weight_difValue.classList.remove('form-red-input');
+        })
+        dom.goal_targetValue.addEventListener('change', function(){
+            dom.goal_targetValue.classList.remove('form-red-input');
+        })
+        dom.goal_time_spanValue.addEventListener('change', function(){
+            dom.goal_time_spanValue.classList.remove('form-red-input');
+        })
+        invalidField=undefined;
     })();
     
 })(dataCalculator, UIcontroller);
