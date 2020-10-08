@@ -6,7 +6,7 @@
 var dataCalculator = (function(){
 
     function getConstants(form_vals){
-        var hgtConst, wgtConst, activityConst, goalConst, genderBMRConst, lbm_height_const, lbm_weight_const, lbm_const;
+        var hgtConst, wgtConst, activityConst, goalConst, genderBMRConst, lbm_height_const, lbm_weight_const, lbm_const, macroConst;
 
         // Checking the Height Unit
         if (form_vals.heightUnit === 'cms'){
@@ -18,31 +18,39 @@ var dataCalculator = (function(){
         // Checking the Wight Unit
         if (form_vals.weightUnit === 'kgs'){
             wgtConst = 1;
+            macroConst = 2.2;
             goalCalorieConst = 7700;
         } else if (form_vals.weightUnit === 'lbs'){
             wgtConst = 2.2;
+            macroConst = 1;
             goalCalorieConst = 3500;
         }
 
         // Checking the Activity Unit
         if (form_vals.activity === 'no'){
             activityConst = 1.2;
-            proteinConst = 0.8;
+            proteinConst = 0.5;
+            fatConst = 0.4;
         } else if (form_vals.activity === 'little'){
             activityConst = 1.35;
-            proteinConst = 0.8;
+            proteinConst = 0.6;
+            fatConst = 0.4;
         } else if (form_vals.activity === 'moderate'){
             activityConst = 1.5;
-            proteinConst = 0.8;
+            proteinConst = 0.7;
+            fatConst = 0.4;
         } else if (form_vals.activity === 'intense'){
             activityConst = 1.6;
             proteinConst = 0.8;
+            fatConst = 0.4;
         } else if (form_vals.activity === 'hard'){
             activityConst = 1.75;
-            proteinConst = 0.8;
+            proteinConst = 0.9;
+            fatConst = 0.4;
         } else if (form_vals.activity === 'very_hard'){
             activityConst = 1.9;
-            proteinConst = 0.8;
+            proteinConst = 1.0;
+            fatConst = 0.4;
         }
 
         // Checking the Goal Unit
@@ -88,7 +96,9 @@ var dataCalculator = (function(){
                 lbm_weight_const        : lbm_weight_const,
                 lbm_height_const        : lbm_height_const,
                 lbm_const               : lbm_const,
-                proteinConst            : proteinConst
+                proteinConst            : proteinConst,
+                fatConst                : fatConst,
+                macroConst              : macroConst
             }
     }
 
@@ -107,14 +117,17 @@ var dataCalculator = (function(){
         var bmr_unit = 'kcal/day';
         var maintenance_cal_val = bmr_val*constants.activityConst;
         var maintenance_cal_unit = 'kcal/day';
-        var lean_body_mass_val = (constants.lbm_weight_const*weight) + (constants.lbm_height_const*height) - constants.lbm_const;
+        var lean_body_mass_val = constants.wgtConst*((constants.lbm_weight_const*weight) + (constants.lbm_height_const*height) - constants.lbm_const);
         var lean_body_mass_unit = form_val.weightUnit;
-        var body_fat_perc_val = ((weight-lean_body_mass_val)/weight)*100;
+        var body_fat_perc_val = ((form_val.weight-lean_body_mass_val)/form_val.weight)*100;     // coz we need the weight in same unit as given thus direct form values are taken
         var body_fat_perc_unit = '%';
         var goal_target_calorie = parseInt(constants.goalTargetConst+(constants.goalCalorieConst*goal_weight_dif));
         var goal_time = (goal_time_span*constants.goalTimePeriodConst);
         var daily_calorie_intake_val = maintenance_cal_val+(goal_target_calorie/goal_time);
-        var protein_val = weight*constants.proteinConst;
+        var protein_val = lean_body_mass_val*constants.macroConst*constants.proteinConst;  // bcz protein constant is for pounds and we need another const for kilogram lbm
+        var fat_val = lean_body_mass_val*constants.macroConst*constants.fatConst;
+        // var carb_val = lean_body_mass_val*constants.macroConst*constants.carbConst;
+        var carb_val = (daily_calorie_intake_val-(protein_val*4)-(fat_val*9))/4;
         var food_unit = 'gms'
         
         return {
@@ -124,9 +137,9 @@ var dataCalculator = (function(){
             body_fat_perc       : [body_fat_perc_val, body_fat_perc_unit],
             lean_body_weight    : [lean_body_mass_val, lean_body_mass_unit],
             daily_calorie       : [daily_calorie_intake_val, maintenance_cal_unit],
-            protein             : [0, food_unit],
-            carb                : [0, food_unit],
-            fat                 : [0, food_unit]
+            protein             : [protein_val, food_unit],
+            carbohydrate        : [carb_val, food_unit],
+            fat                 : [fat_val, food_unit]
         }
     }
 
@@ -226,7 +239,7 @@ var UIcontroller = (function(){
 // ============================== CONTROLS THE BASIC FUNCTIONS ======================================
 
 var controller = (function(dataCalc, UIctrl){
-    var formValues, resultObj, invalidField, pressedEvent;
+    var formValues, resultObj, invalidField, pressedEvent, firstCalculation;
     /*
     1. Get the Field Input Data
     2. Add the data to the DataCalculator
@@ -289,6 +302,7 @@ var controller = (function(dataCalc, UIctrl){
             } else{
                 UIctrl.resultDisplay(resultObj.bmi);                               // SETTING THE RESULT IN THE UI
             }
+            firstCalculation = true;
         } else {
             UIctrl.add_invalid_el(invalidField);
             invalidField=undefined;
@@ -316,6 +330,7 @@ var controller = (function(dataCalc, UIctrl){
         formValues = undefined;
         resultObj = undefined;
         invalidField = undefined;
+        firstCalculation = undefined
     }
     
     var checkResultType = function(event){
@@ -340,7 +355,7 @@ var controller = (function(dataCalc, UIctrl){
 
     var updateVal = function(){
         // Checking if FromValues are set
-        if (formValues){
+        if (firstCalculation){
             formValues =  setFormValues(dom);
             // Checking if formvalues are set then are all of them valid or some are undefined, if undefined the below function is not executed
             if (formValuesCheck(formValues)){
@@ -350,11 +365,6 @@ var controller = (function(dataCalc, UIctrl){
                 invalidField=undefined;
             }
         }
-    }
-
-    var updateGoal = function(){
-        // formValues =  setFormValues(dom);
-
     }
 
     dom.calcBtn.addEventListener('click', calculateAndShow);
