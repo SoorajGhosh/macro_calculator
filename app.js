@@ -341,11 +341,20 @@ var controller = (function(dataCalc, UIctrl){
     var updateVal = function(){
         // Checking if FromValues are set
         if (formValues){
+            formValues =  setFormValues(dom);
             // Checking if formvalues are set then are all of them valid or some are undefined, if undefined the below function is not executed
             if (formValuesCheck(formValues)){
                 calculateAndShow();
+            } else {
+                UIctrl.add_invalid_el(invalidField);
+                invalidField=undefined;
             }
         }
+    }
+
+    var updateGoal = function(){
+        // formValues =  setFormValues(dom);
+
     }
 
     dom.calcBtn.addEventListener('click', calculateAndShow);
@@ -360,7 +369,7 @@ var controller = (function(dataCalc, UIctrl){
     dom.weightUnit.addEventListener("input", updateVal);
     dom.ageValue.addEventListener("input", updateVal);
     dom.activity.addEventListener("input", updateVal);
-    dom.goal_weight_difValue.addEventListener("input", updateVal);
+    dom.goal_weight_difValue.addEventListener("change", updateVal);
     dom.goal_targetValue.addEventListener("input", updateVal);
     dom.goal_time_spanValue.addEventListener("input", updateVal);
     dom.goal_time_periodValue.addEventListener("input", updateVal);
