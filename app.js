@@ -174,6 +174,7 @@ var UIcontroller = (function(){
         calcBtn : document.querySelector('#calc-btn'),
         clearBtn : document.querySelector("#clear-btn"),
         // RESULT METHODs
+        resultMobileMetods : document.querySelector('#result-mobile-methods'),
         resultMethods : document.querySelector('.result-methods'),
         allResultMethods : document.querySelectorAll('.result-method'),
         // MACROS
@@ -239,7 +240,7 @@ var UIcontroller = (function(){
 // ============================== CONTROLS THE BASIC FUNCTIONS ======================================
 
 var controller = (function(dataCalc, UIctrl){
-    var formValues, resultObj, invalidField, pressedEvent, firstCalculation;
+    var formValues, resultObj, invalidField, pressedEvent, firstCalculation, displayType, mobileView;
     /*
     1. Get the Field Input Data
     2. Add the data to the DataCalculator
@@ -250,17 +251,17 @@ var controller = (function(dataCalc, UIctrl){
     
     var setFormValues = function(domVal){
         return {
-            height : domVal.heightValue.value,
-            heightUnit : domVal.heightUnit.value,
-            weight : domVal.weightValue.value,
-            weightUnit: domVal.weightUnit.value,
-            age : domVal.ageValue.value,
-            activity : domVal.activity.value,
-            goal_weight_dif : domVal.goal_weight_difValue.value,
-            goal_target : domVal.goal_targetValue.value,
-            goal_time_span : domVal.goal_time_spanValue.value,
-            goal_time_period : domVal.goal_time_periodValue.value,
-            gender : domVal.gender.value
+            height              : domVal.heightValue.value,
+            heightUnit          : domVal.heightUnit.value,
+            weight              : domVal.weightValue.value,
+            weightUnit          : domVal.weightUnit.value,
+            age                 : domVal.ageValue.value,
+            activity            : domVal.activity.value,
+            goal_weight_dif     : domVal.goal_weight_difValue.value,
+            goal_target         : domVal.goal_targetValue.value,
+            goal_time_span      : domVal.goal_time_spanValue.value,
+            goal_time_period    : domVal.goal_time_periodValue.value,
+            gender              : domVal.gender.value
         }
     }
 
@@ -295,7 +296,7 @@ var controller = (function(dataCalc, UIctrl){
         formValues =  setFormValues(dom);
 
         if (formValuesCheck(formValues)){
-            UIctrl.elementsDisplayChange(dom.allResultMethods, 'inline-block');    // DISPLAY THE RESULT METHODS
+            UIctrl.elementsDisplayChange(dom.allResultMethods, displayType);        // DISPLAY THE RESULT METHODS
             resultObj = dataCalc.resultObj(formValues);                            // SENDING THE FORM VALUES TO THE DATA CONTROLLER AND RECIEVING THE RESULT OUTPUT ARRAY
             if (pressedEvent){
                 checkResultType(pressedEvent);
@@ -411,6 +412,23 @@ var controller = (function(dataCalc, UIctrl){
         invalidField=undefined;
     })();
     
+
+    
+    var media = window.matchMedia("(max-width: 700px)")
+
+    function checkMedia(mediaQuery) {
+        if (mediaQuery.matches) {
+            displayType = 'block';
+            mobileView = true;
+        } else {
+            displayType = 'inline-block';
+            mobileView = false;
+        }
+    }
+
+    checkMedia(media)                                               // Call listener function at run time
+    media.addListener(checkMedia)                                   // Attach listener function on state changes
+
 })(dataCalculator, UIcontroller);
 
 

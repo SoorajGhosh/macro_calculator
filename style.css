@@ -162,6 +162,15 @@
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
+#result-mobile-methods{
+	display: none;
+	position: absolute;
+	height: auto;
+	width: auto;
+	top: 2%;
+	left: 2%;
+}
+
 .result-methods{
 	display: block;
 	position: absolute;
@@ -348,9 +357,16 @@
 		margin: 1% 2% 1% 2%;
 	}
 
+		
+	#result-mobile-methods{
+		display: block;
+		width: auto;
+	}
+
 	.result-methods{
 		width: 60%;
 		bottom: 1%;
+		display: none;
 	}
 
 	.result-method{
