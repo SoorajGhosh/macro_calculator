@@ -240,7 +240,7 @@ var UIcontroller = (function(){
 // ============================== CONTROLS THE BASIC FUNCTIONS ======================================
 
 var controller = (function(dataCalc, UIctrl){
-    var formValues, resultObj, invalidField, pressedEvent, firstCalculation, displayType, mobileView;
+    var formValues, resultObj, invalidField, pressedEvent, firstCalculation, mobileView;
     /*
     1. Get the Field Input Data
     2. Add the data to the DataCalculator
@@ -261,7 +261,8 @@ var controller = (function(dataCalc, UIctrl){
             goal_target         : domVal.goal_targetValue.value,
             goal_time_span      : domVal.goal_time_spanValue.value,
             goal_time_period    : domVal.goal_time_periodValue.value,
-            gender              : domVal.gender.value
+            gender              : domVal.gender.value,
+            mobileResults       : dom.resultMobileMetods
         }
     }
 
@@ -296,14 +297,26 @@ var controller = (function(dataCalc, UIctrl){
         formValues =  setFormValues(dom);
 
         if (formValuesCheck(formValues)){
-            UIctrl.elementsDisplayChange(dom.allResultMethods, displayType);        // DISPLAY THE RESULT METHODS
-            resultObj = dataCalc.resultObj(formValues);                            // SENDING THE FORM VALUES TO THE DATA CONTROLLER AND RECIEVING THE RESULT OUTPUT ARRAY
+            resultObj = dataCalc.resultObj(formValues);                                                                 // SENDING THE FORM VALUES TO THE DATA CONTROLLER AND RECIEVING THE RESULT OUTPUT ARRAY
+            
+            // IF A RESULT METHOD IS ALREADY SELECTED THEN THAT RESULT WILL BE DISPLAYED ON THE UPDATE
             if (pressedEvent){
                 checkResultType(pressedEvent);
             } else{
-                UIctrl.resultDisplay(resultObj.bmi);                               // SETTING THE RESULT IN THE UI
+                UIctrl.resultDisplay(resultObj.bmi);                                                                    // SETTING THE RESULT IN THE UI
             }
-            firstCalculation = true;
+            // SETTING THE FIRST CALCULATION VARIABLE TO TRUE SO AS TO DEFINE THAT THE FIRST PRESS ON THR CALCULATE BUTTON IS PRESSED.
+            if (!firstCalculation){
+                firstCalculation = true;
+                // SETTING THE DISPLAYS CHANGES ACCORDING TO RESPONSIVE PAGES
+                if (mobileView){
+                    UIctrl.elementsDisplayChange([dom.resultMobileMetods,], 'block');                                   // BCZ WE NEED LISTS TO CHANGE DISPLAY
+                    dom.resultMobileMetods.addEventListener('input', updateVal)    // we set it here bcz else it was not existing in the dom before as its display is none
+                } else {
+                    UIctrl.elementsDisplayChange(dom.allResultMethods, 'inline-block');                                 // DISPLAY THE RESULT METHODS
+                } 
+            }
+            
         } else {
             UIctrl.add_invalid_el(invalidField);
             invalidField=undefined;
@@ -336,21 +349,31 @@ var controller = (function(dataCalc, UIctrl){
     
     var checkResultType = function(event){
         var target_el = event.target;
-        pressedEvent = event;
-        if (target_el.className === dom.allResultMethods[0].className){
-            dom.shownResult.innerHTML = target_el.innerHTML;
-            dom.shownResult.style.textTransform="uppercase";
-            UIctrl.resultDisplay(resultObj[target_el.id]);
-            if (target_el.id === 'daily_calorie'){
-                UIctrl.elementsDisplayChange(dom.allMacros, 'block');
-            }
-        } else if (target_el.className === dom.allMacros[0].className || target_el.parentNode.className === dom.allMacros[0].className){
+        //CHECKING IF TARGET ELEMENT IS FROM MACRO AND IT COMES FIRST BECAUSE ITS MUST BE CHECKED FIRST 
+        if (target_el.className === dom.allMacros[0].className || target_el.parentNode.className === dom.allMacros[0].className){
             if (target_el.parentNode.className === dom.allMacros[0].className){
                 target_el = target_el.parentNode
             }
             dom.shownResult.innerHTML = target_el.id;
             dom.shownResult.style.textTransform="uppercase";
             UIctrl.resultDisplay(resultObj[target_el.id]);
+        } else if (mobileView && target_el === dom.resultMobileMetods){
+            selectedResult = target_el.options[target_el.selectedIndex]
+            pressedEvent = {target:selectedResult,};                        // Set it as the target item of a dictionary so as the update function can recognise it as an event
+            dom.shownResult.innerHTML = selectedResult.text;
+            dom.shownResult.style.textTransform="uppercase";
+            UIctrl.resultDisplay(resultObj[selectedResult.value]);
+            if (selectedResult.value === 'daily_calorie'){
+                UIctrl.elementsDisplayChange(dom.allMacros, 'block');
+            }
+        } else if (target_el.className === dom.allResultMethods[0].className){
+            pressedEvent = event;
+            dom.shownResult.innerHTML = target_el.innerHTML;
+            dom.shownResult.style.textTransform="uppercase";
+            UIctrl.resultDisplay(resultObj[target_el.id]);
+            if (target_el.id === 'daily_calorie'){
+                UIctrl.elementsDisplayChange(dom.allMacros, 'block');
+            }
         }
     }
 
@@ -360,6 +383,9 @@ var controller = (function(dataCalc, UIctrl){
             formValues =  setFormValues(dom);
             // Checking if formvalues are set then are all of them valid or some are undefined, if undefined the below function is not executed
             if (formValuesCheck(formValues)){
+                if (mobileView){
+                    pressedEvent = {target:formValues.mobileResults,}   //Setting the presedEvent to resultMethods so as it can be captured in calculateAndShow
+                }
                 calculateAndShow();
             } else {
                 UIctrl.add_invalid_el(invalidField);
@@ -385,7 +411,7 @@ var controller = (function(dataCalc, UIctrl){
     dom.goal_time_spanValue.addEventListener("input", updateVal);
     dom.goal_time_periodValue.addEventListener("input", updateVal);
     dom.gender.addEventListener("input", updateVal);
-    
+        
 
     // THE CODE BELOW THE BUTTON CLICK ONLY HApPENS AFTER THE BUTTON IS CLICKED
 
@@ -413,15 +439,13 @@ var controller = (function(dataCalc, UIctrl){
     })();
     
 
-    
+    // MOBILE RESPONSIVENESS AND MEDIA QUERY IS SET HERE
     var media = window.matchMedia("(max-width: 700px)")
 
     function checkMedia(mediaQuery) {
         if (mediaQuery.matches) {
-            displayType = 'block';
             mobileView = true;
         } else {
-            displayType = 'inline-block';
             mobileView = false;
         }
     }
