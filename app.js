@@ -324,7 +324,12 @@ var controller = (function(dataCalc, UIctrl){
     }
     
     var clearFunc = function(){
-        UIctrl.elementsDisplayChange(dom.allResultMethods,'none');      // Hiding the result methods
+        if (mobileView){
+            UIctrl.elementsDisplayChange([dom.resultMobileMetods,],'none');
+        } else {
+            UIctrl.elementsDisplayChange(dom.allResultMethods,'none');   // Hiding the result methods
+        }
+        
         UIctrl.elementsDisplayChange(dom.allMacros,'none');             // Hiding the macro
         dom.heightValue.value ='';                                      // Deleting values from form
         dom.heightUnit.value = 'cms';
