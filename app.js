@@ -249,7 +249,7 @@ var UIcontroller = (function(){
 // ============================== CONTROLS THE BASIC FUNCTIONS ======================================
 
 var controller = (function(dataCalc, UIctrl){
-    var formValues, resultObj, invalidField, pressedEvent, firstCalculation, mobileView;
+    var formValues, resultObj, invalidField, pressedEvent, firstCalculation, mobileView, previousMobileResult;
     /*
     1. Get the Field Input Data
     2. Add the data to the DataCalculator
@@ -323,9 +323,9 @@ var controller = (function(dataCalc, UIctrl){
                 firstCalculation = true;
                 // SETTING THE DISPLAYS CHANGES ACCORDING TO RESPONSIVE PAGES
                 if (mobileView){
-                    pressedEvent = {target:formValues.mobileResults,}                   // Setting the presedEvent to resultMobileMethods so as it can be captured in calculateAndShow
+                    // pressedEvent = {target:formValues.mobileResults,}                   // Setting the presedEvent to resultMobileMethods so as it can be captured in calculateAndShow
                     UIctrl.elementsDisplayChange([dom.resultMobileMetods,], 'block');   // BCZ WE NEED LISTS TO CHANGE DISPLAY
-                    dom.resultMobileMetods.addEventListener('input', updateVal)         // we set it here bcz else it was not existing in the dom before as its display is none
+                    dom.resultMobileMetods.addEventListener('input', checkResultType)         // we set it here bcz else it was not existing in the dom before as its display is none
                 } else {
                     UIctrl.elementsDisplayChange(dom.allResultMethods, 'inline-block'); // DISPLAY THE RESULT METHODS
                 } 
@@ -368,9 +368,25 @@ var controller = (function(dataCalc, UIctrl){
     }
     
     var checkResultType = function(event){
-        var target_el = event.target;
+        // checking if any result other than daily calorie is selected if yes then remove the macors
+        var macroCheck = function(element){ return (element.className === dom.allMacros[0].className || element.parentNode.className === dom.allMacros[0].className)}; // Checking for macros for any element
+        
+        if (mobileView && event.target.id === 'result-mobile-methods'){         // checking if mobile result methods and in mobile view
+            var target_el = event.target.options[event.target.selectedIndex];
+        } else {
+            var target_el = event.target;
+        }
+        
+        if (pressedEvent && !macroCheck(target_el)){    // Checking if pressed event exists and if taregt element is a macro
+            if (!mobileView && (pressedEvent.target.id === 'daily_calorie' || macroCheck(pressedEvent.target)) && target_el.id !== 'daily_calorie'){   // checking if event is daily calorie or any macro and is it changed from it to something else
+                UIctrl.elementsDisplayChange(dom.allMacros,'none');
+            } else if (mobileView && previousMobileResult.value==='daily_calorie' && target_el.value!=='daily_calorie'){ // pressedEvent or the event that was before is daily calorie and the element now is something other than daily calorie then
+                UIctrl.elementsDisplayChange(dom.allMacros,'none');
+            }
+        }
+
         //CHECKING IF TARGET ELEMENT IS FROM MACRO AND IT COMES FIRST BECAUSE ITS MUST BE CHECKED FIRST 
-        if (target_el.className === dom.allMacros[0].className || target_el.parentNode.className === dom.allMacros[0].className){
+        if (macroCheck(target_el)){
             if (target_el.parentNode.className === dom.allMacros[0].className){
                 target_el = target_el.parentNode
             }
@@ -378,13 +394,13 @@ var controller = (function(dataCalc, UIctrl){
             dom.shownResult.innerHTML = target_el.id;
             dom.shownResult.style.textTransform="uppercase";
             UIctrl.resultDisplay(resultObj[target_el.id]);
-        } else if (mobileView && target_el === dom.resultMobileMetods){
-            selectedResult = target_el.options[target_el.selectedIndex]
-            pressedEvent = {target:target_el,};                        // Set it as the target item of a dictionary so as the update function can recognise it as an event
-            dom.shownResult.innerHTML = selectedResult.text;
+        } else if (mobileView && event.target.id === 'result-mobile-methods'){
+            pressedEvent = event;                        // Set it as the target item of a dictionary so as the update function can recognise it as an event
+            previousMobileResult = target_el;           // this will store the previous target to check during macro removsl
+            dom.shownResult.innerHTML = target_el.text;
             dom.shownResult.style.textTransform="uppercase";
-            UIctrl.resultDisplay(resultObj[selectedResult.value]);
-            if (selectedResult.value === 'daily_calorie'){
+            UIctrl.resultDisplay(resultObj[target_el.value]);
+            if (target_el.value === 'daily_calorie'){
                 UIctrl.elementsDisplayChange(dom.allMacros, 'block');
             }
         } else if (target_el.className === dom.allResultMethods[0].className){
