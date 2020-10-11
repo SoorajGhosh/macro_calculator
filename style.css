@@ -165,9 +165,10 @@
 #result-mobile-methods{
 	display: none;
 	position: absolute;
+	margin: 0;
 	height: auto;
 	width: auto;
-	top: 2%;
+	top: 3%;
 	left: 2%;
 }
 

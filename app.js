@@ -6,22 +6,26 @@
 var dataCalculator = (function(){
 
     function getConstants(form_vals){
-        var hgtConst, wgtConst, activityConst, goalConst, genderBMRConst, lbm_height_const, lbm_weight_const, lbm_const, macroConst;
+        var hgtConst, wgtConst, activityConst, goalConst, genderBMRConst, lbm_height_const, lbm_weight_const, lbm_const, macroConst, hgt_unit, wgt_unit;
 
         // Checking the Height Unit
         if (form_vals.heightUnit === 'cms'){
             hgtConst = 1;
+            hgt_unit = 'cms';
         } else if (form_vals.heightUnit === 'inch'){
             hgtConst = 0.39;
+            hgt_unit = 'inch';
         }
 
         // Checking the Wight Unit
         if (form_vals.weightUnit === 'kgs'){
             wgtConst = 1;
+            wgt_unit = 'kgs'
             macroConst = 2.2;
             goalCalorieConst = 7700;
         } else if (form_vals.weightUnit === 'lbs'){
             wgtConst = 2.2;
+            wgt_unit = 'lbs'
             macroConst = 1;
             goalCalorieConst = 3500;
         }
@@ -86,8 +90,10 @@ var dataCalculator = (function(){
         }
 
         return {
-                hgtConst                : hgtConst, 
+                hgtConst                : hgtConst,     
+                hgt_unit                : hgt_unit,
                 wgtConst                : wgtConst,
+                wgt_unit                : wgt_unit,
                 activityConst           : activityConst, 
                 goalCalorieConst        : goalCalorieConst,
                 goalTargetConst         : goalTargetConst, 
@@ -139,7 +145,8 @@ var dataCalculator = (function(){
             daily_calorie       : [daily_calorie_intake_val, maintenance_cal_unit],
             protein             : [protein_val, food_unit],
             carbohydrate        : [carb_val, food_unit],
-            fat                 : [fat_val, food_unit]
+            fat                 : [fat_val, food_unit],
+            units               : [getConstants.hgt_unit, getConstants.wgt_unit]
         }
     }
 
@@ -195,6 +202,8 @@ var UIcontroller = (function(){
         if (int.length>3){
             int = int.substr(0,int.length-3) + ',' + int.substr(int.length-3,3);        // 1074 ==> 1,074
             value = int
+        } else if (int.length===3){
+            value = val.toFixed(1);                                                     // 391.87 ==> 391.9
         } else {
             value = int +'.' + dec;                                                     //20 + . + 42 ==> 20.42
         }
@@ -291,29 +300,34 @@ var controller = (function(dataCalc, UIctrl){
         return true
     }
 
+    var setPlaceHolder = function(formVal){
+        dom.goal_weight_difValue.placeholder = '0 ' + formVal.weightUnit;
+    }
+
     var calculateAndShow = function(){
 
         // SETTING AND GETTING THE FORM VALUES
         formValues =  setFormValues(dom);
-
+        
         if (formValuesCheck(formValues)){
-            resultObj = dataCalc.resultObj(formValues);                                                                 // SENDING THE FORM VALUES TO THE DATA CONTROLLER AND RECIEVING THE RESULT OUTPUT ARRAY
+            resultObj = dataCalc.resultObj(formValues);                                 // SENDING THE FORM VALUES TO THE DATA CONTROLLER AND RECIEVING THE RESULT OUTPUT ARRAY
             
             // IF A RESULT METHOD IS ALREADY SELECTED THEN THAT RESULT WILL BE DISPLAYED ON THE UPDATE
             if (pressedEvent){
                 checkResultType(pressedEvent);
             } else{
-                UIctrl.resultDisplay(resultObj.bmi);                                                                    // SETTING THE RESULT IN THE UI
+                UIctrl.resultDisplay(resultObj.bmi);                                    // SETTING THE RESULT IN THE UI
             }
             // SETTING THE FIRST CALCULATION VARIABLE TO TRUE SO AS TO DEFINE THAT THE FIRST PRESS ON THR CALCULATE BUTTON IS PRESSED.
             if (!firstCalculation){
                 firstCalculation = true;
                 // SETTING THE DISPLAYS CHANGES ACCORDING TO RESPONSIVE PAGES
                 if (mobileView){
-                    UIctrl.elementsDisplayChange([dom.resultMobileMetods,], 'block');                                   // BCZ WE NEED LISTS TO CHANGE DISPLAY
-                    dom.resultMobileMetods.addEventListener('input', updateVal)    // we set it here bcz else it was not existing in the dom before as its display is none
+                    pressedEvent = {target:formValues.mobileResults,}                   // Setting the presedEvent to resultMobileMethods so as it can be captured in calculateAndShow
+                    UIctrl.elementsDisplayChange([dom.resultMobileMetods,], 'block');   // BCZ WE NEED LISTS TO CHANGE DISPLAY
+                    dom.resultMobileMetods.addEventListener('input', updateVal)         // we set it here bcz else it was not existing in the dom before as its display is none
                 } else {
-                    UIctrl.elementsDisplayChange(dom.allResultMethods, 'inline-block');                                 // DISPLAY THE RESULT METHODS
+                    UIctrl.elementsDisplayChange(dom.allResultMethods, 'inline-block'); // DISPLAY THE RESULT METHODS
                 } 
             }
             
@@ -342,6 +356,7 @@ var controller = (function(dataCalc, UIctrl){
         dom.goal_time_spanValue.value = '';
         dom.goal_time_periodValue.value = 'week';
         dom.gender.value = 'male';
+        dom.resultMobileMetods.value = 'bmi';
         dom.resultValue.innerHTML = 0;                                  // Setting default in results
         dom.resultUnit.innerHTML = 'unit';
         dom.shownResult.innerHTML = 'BMI';
@@ -359,12 +374,13 @@ var controller = (function(dataCalc, UIctrl){
             if (target_el.parentNode.className === dom.allMacros[0].className){
                 target_el = target_el.parentNode
             }
+            pressedEvent = event;
             dom.shownResult.innerHTML = target_el.id;
             dom.shownResult.style.textTransform="uppercase";
             UIctrl.resultDisplay(resultObj[target_el.id]);
         } else if (mobileView && target_el === dom.resultMobileMetods){
             selectedResult = target_el.options[target_el.selectedIndex]
-            pressedEvent = {target:selectedResult,};                        // Set it as the target item of a dictionary so as the update function can recognise it as an event
+            pressedEvent = {target:target_el,};                        // Set it as the target item of a dictionary so as the update function can recognise it as an event
             dom.shownResult.innerHTML = selectedResult.text;
             dom.shownResult.style.textTransform="uppercase";
             UIctrl.resultDisplay(resultObj[selectedResult.value]);
@@ -386,11 +402,10 @@ var controller = (function(dataCalc, UIctrl){
         // Checking if FromValues are set
         if (firstCalculation){
             formValues =  setFormValues(dom);
+            // Setting the placeholder according to the weight unit.
+            setPlaceHolder(formValues);
             // Checking if formvalues are set then are all of them valid or some are undefined, if undefined the below function is not executed
             if (formValuesCheck(formValues)){
-                if (mobileView){
-                    pressedEvent = {target:formValues.mobileResults,}   //Setting the presedEvent to resultMethods so as it can be captured in calculateAndShow
-                }
                 calculateAndShow();
             } else {
                 UIctrl.add_invalid_el(invalidField);
