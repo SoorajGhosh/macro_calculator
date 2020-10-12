@@ -305,7 +305,7 @@ var controller = (function(dataCalc, UIctrl){
     }
 
     var calculateAndShow = function(){
-
+        
         // SETTING AND GETTING THE FORM VALUES
         formValues =  setFormValues(dom);
         
@@ -368,6 +368,7 @@ var controller = (function(dataCalc, UIctrl){
     }
     
     var checkResultType = function(event){
+        
         // checking if any result other than daily calorie is selected if yes then remove the macors
         var macroCheck = function(element){ return (element.className === dom.allMacros[0].className || element.parentNode.className === dom.allMacros[0].className)}; // Checking for macros for any element
         
@@ -377,7 +378,7 @@ var controller = (function(dataCalc, UIctrl){
             var target_el = event.target;
         }
         
-        if (pressedEvent && !macroCheck(target_el)){    // Checking if pressed event exists and if taregt element is a macro
+        if (pressedEvent && (!macroCheck(target_el) && target_el!==dom.macros)){    // Checking if pressed event exists and if taregt element is a macro or form maacros element
             if (!mobileView && (pressedEvent.target.id === 'daily_calorie' || macroCheck(pressedEvent.target)) && target_el.id !== 'daily_calorie'){   // checking if event is daily calorie or any macro and is it changed from it to something else
                 UIctrl.elementsDisplayChange(dom.allMacros,'none');
             } else if (mobileView && previousMobileResult.value==='daily_calorie' && target_el.value!=='daily_calorie'){ // pressedEvent or the event that was before is daily calorie and the element now is something other than daily calorie then
