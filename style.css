@@ -22,14 +22,14 @@ body{
 	position: absolute;
 	display: inline-block;
 	background: rgba(1, 5, 26, 0.7);
-	height: 95%;
-	width: 90%;
+	height: 100%;
+	width: 100%;
 	border-radius: 20px;
 	overflow: hidden;
-	bottom: 1%;
-	right: 1%;
+	bottom: 0%;
+	right: 0%;
 	transition: 0.5s;
-	clip-path: circle(6.3% at 90.1% 48.72%);
+	clip-path: circle(5.7% at 91.1% 49.3%);
 }
 
 #branding-icon img {
@@ -83,7 +83,7 @@ body{
 	position: absolute;
 	display: inline-block;
 	bottom: 2%;
-	left: 2%;
+	right: 2%;
 	font-size: 0.8rem;
 	text-align: center;
 	align-items: center;
