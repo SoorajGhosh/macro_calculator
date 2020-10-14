@@ -3,10 +3,16 @@
 <head>
 	<title>Macro Calculator</title>
 	<link rel="stylesheet" type="text/css" href="style.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
 	<meta content="width=device-width, initial-scale=1" name="viewport" />
 </head>
 <body>
-
+	<div class='branding'> 
+		<a href="#" class='brand brand-name'> Team VR-Fit </a>
+		<button class='brand' id='branding-btn'><i class="fas fa-arrow-up"></i></button>
+		<a href="#" class='brand my-logo'>Created By: Sooraj Ghosh</a>
+	</div>
+	
 	<div class= "container">
 	
 		<div class="input-form">
@@ -102,6 +108,12 @@
 				<button class="macro" id="protein"> <img src="images/egg.png"> </button>
 				<button class="macro" id="carbohydrate"> <img src="images/bread.png"> </button>
 				<button class="macro" id="fat"> <img src="images/fat.png"> </button>
+			</div>
+
+			<div id='branding-icon'> 
+				<img src="images/brand.jpg" alt="VR-FIT">
+				<a href="#" class='brand brand-icon-name'> Team VR-Fit </a> 
+				<a href="#" class='brand brand-icon-my-logo'>Created By: Sooraj Ghosh</a>
 			</div>
 
 			<div class="shown-result">Result: <span id="shown-result-category">BMI</span> </div>

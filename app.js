@@ -165,32 +165,36 @@ var UIcontroller = (function(){
 
     var domValues = function(){
         return {
-        // FORM INPUT
-        heightValue : document.querySelector('#height-inp'),
-        heightUnit : document.querySelector('#height-unit'),
-        weightValue : document.querySelector('#weight-inp'),
-        weightUnit : document.querySelector('#weight-unit'),
-        ageValue : document.querySelector('#age-inp'),
-        activity : document.querySelector('#activity-inp'),
-        goal_weight_difValue : document.querySelector('#weight-dif-inp'),
-        goal_targetValue : document.querySelector('#target-inp'),
-        goal_time_spanValue : document.querySelector('#time-span-inp'),
-        goal_time_periodValue : document.querySelector('#time-period-inp'),
-        gender : document.querySelector('#gender-inp'),
-        // BUTTON
-        calcBtn : document.querySelector('#calc-btn'),
-        clearBtn : document.querySelector("#clear-btn"),
-        // RESULT METHODs
-        resultMobileMetods : document.querySelector('#result-mobile-methods'),
-        resultMethods : document.querySelector('.result-methods'),
-        allResultMethods : document.querySelectorAll('.result-method'),
-        // MACROS
-        macros : document.querySelector('.macros'),
-        allMacros : document.querySelectorAll('.macro'),
-        // RESULT
-        resultValue : document. querySelector('#calc-result-value'),
-        resultUnit : document.querySelector('#calc-result-unit'),
-        shownResult : document.getElementById('shown-result-category')
+            // BRANDING
+            branding : document.querySelector('.branding'),
+            brandItems : document.querySelectorAll('.brand'),
+            brandBtn : document.getElementById('branding-btn'),
+            // FORM INPUT
+            heightValue : document.querySelector('#height-inp'),
+            heightUnit : document.querySelector('#height-unit'),
+            weightValue : document.querySelector('#weight-inp'),
+            weightUnit : document.querySelector('#weight-unit'),
+            ageValue : document.querySelector('#age-inp'),
+            activity : document.querySelector('#activity-inp'),
+            goal_weight_difValue : document.querySelector('#weight-dif-inp'),
+            goal_targetValue : document.querySelector('#target-inp'),
+            goal_time_spanValue : document.querySelector('#time-span-inp'),
+            goal_time_periodValue : document.querySelector('#time-period-inp'),
+            gender : document.querySelector('#gender-inp'),
+            // BUTTON
+            calcBtn : document.querySelector('#calc-btn'),
+            clearBtn : document.querySelector("#clear-btn"),
+            // RESULT METHODs
+            resultMobileMetods : document.querySelector('#result-mobile-methods'),
+            resultMethods : document.querySelector('.result-methods'),
+            allResultMethods : document.querySelectorAll('.result-method'),
+            // MACROS
+            macros : document.querySelector('.macros'),
+            allMacros : document.querySelectorAll('.macro'),
+            // RESULT
+            resultValue : document. querySelector('#calc-result-value'),
+            resultUnit : document.querySelector('#calc-result-unit'),
+            shownResult : document.getElementById('shown-result-category')
         }
     }
 
@@ -431,6 +435,11 @@ var controller = (function(dataCalc, UIctrl){
         }
     }
 
+    function addBrnadingAnimation(){
+        dom.branding.classList.toggle('branding-animation');
+    }
+
+    dom.brandBtn.addEventListener('click', addBrnadingAnimation)      // adding a toggle class which will hold the animation and other changs in branding
     dom.calcBtn.addEventListener('click', calculateAndShow);
     dom.clearBtn.addEventListener('click', clearFunc);
     dom.resultMethods.addEventListener('click',checkResultType);
