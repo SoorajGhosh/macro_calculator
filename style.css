@@ -11,7 +11,10 @@ body{
 }
 
 a{
+	color:white;
 	text-decoration: none;
+	padding: 0;
+	margin: 0;
 	outline: none;
 }
 
@@ -21,7 +24,7 @@ a{
 
 /* ============================== BRANDING ============================== */
 
-#branding-icon{
+.branding-icon{
 	position: absolute;
 	display: inline-block;
 	background: rgba(1, 5, 26, 1);
@@ -35,12 +38,16 @@ a{
 	clip-path: circle(3.8% at 95% 50%);	/* radius at origin-point(x y)*/
 }
 
-#branding-icon:hover{
+.branding-icon:hover{
 	clip-path: circle(100% at 50% 50%);
 }
 
-#branding-icon:active{
+.branding-fill-icon{
 	clip-path: circle(100% at 50% 50%);
+}
+
+.branding-fill-icon #branding-info{
+	display: none;
 }
 
 #branding-info{
@@ -53,18 +60,20 @@ a{
 	transition: 0.3s;
 }
 
-#branding-icon:hover #branding-info{
+.branding-icon:hover #branding-info{
 	opacity: 0%;
 	color: rgb(233, 61, 90);
 }
 
 .brand-icon-name{
 	position: absolute;
+	font-family: 'Balsamiq Sans', cursive;
 	display: inline-block;
 	color: white;
+	padding: 0 1%;
 	top: 10%;
-	left: 30%;
-	font-size: 3.5rem;
+	left: 20%;
+	font-size: 5rem;
 	border-radius: 10px;
 	border: 2px solid rgb(233, 61, 90);
 	transition: 0.5s;
@@ -72,8 +81,8 @@ a{
 }
 
 .brand-icon-name:hover{
-	font-size: 4rem;
-	left: 27%;
+	font-size: 5.5rem;
+	left: 17%;
 	background:rgb(233, 61, 90);
 	box-shadow: 10px 10px 10px rgba(233, 61, 90, 0.2), 
 				-10px 10px 10px rgba(233, 61, 90, 0.2), 
@@ -81,47 +90,79 @@ a{
 				10px -10px 10px rgba(233, 61, 90, 0.2);
 }
 
-#branding-icon img {
+.personal {
+	position: relative;
+	display: inline-block;
+	top: 45%;
+	left: 20%;
+	height: 202px;
+	width: 162px;
+	border-radius: 10px;
+	justify-content: center;
+	transition: all 0.5s;
+}
+
+.personal:hover {
+	height: 250px;
+}
+
+.personal img {
 	position: absolute;
-	top: 40%;
-	left: 30%;
-	height: 150px;
-	width: 120px;
+	height: 200px;
+	width: 160px;
 	border-radius: 10px;
 	transition: all 0.5s;
 	-webkit-box-reflect: below 1px linear-gradient(transparent,transparent, transparent, rgba(233, 61, 90, 0.2));
+}
+
+.info{
+	color: white;
+	display: inline-block;
+	position: absolute;
+}
+
+.info-big{
+	font-size: 1.2rem;
+	bottom: 9%;
+}
+
+.info-small{
+	font-size: 0.8rem;
+	bottom: 2%;
 }
 
 .fab{
 	position: absolute;
 	margin: 0px;
 	padding: 0px;
-	left: 65%;
-	font-size: 4rem;
+	left: 70%;
+	font-size: 5.5rem;
 	transition: 0.3s;
 	color: whitesmoke;
 }
 
 .fab:hover{
 	color: rgb(233, 61, 90);
+	transform: rotate(7deg);
 }
 
 #ig-icon{
-	top: 40%;
+	top: 45%;
 }
 
 #fb-icon{
-	top: 55%;
+	top: 65%;
 }
 
 .brand-icon-my-logo{
 	position: absolute;
+	color: white;
 	display: inline-block;
-	padding: 1%;
+	padding: 0.6%;
 	border-radius: 3px;
-	bottom: 2%;
-	right: 2%;
-	font-size: 0.8rem;
+	bottom: 0.7%;
+	right: 0.7%;
+	font-size: 0.7rem;
 	text-align: center;
 	align-items: center;
 	transition: 0.2s;
@@ -136,104 +177,6 @@ a{
 				2px -2px 6px rgba(32, 211, 247,0.2);
 }
 
-
-
-
-
-.branding{
-	position: absolute;
-	display: none;
-	height: 100vh;
-	width: 100vw;
-	background: black;
-	color: white;
-	z-index: 1;
-	overflow: hidden;
-	/* clip-path: polygon(0 0, 0% 55%, 35% 100%, 65% 100%, 100% 55%, 100% 0); */
-	clip-path: polygon(0% 0%, 100% 0%, 100% 90%, 90% 90%, 90% 100%, 74% 90%, 0 90%);
-}
-
-.brand{
-	/* border: 1px solid white; */
-	padding: 0.5% 1%;
-	margin: 0;
-	text-decoration: none;
-	color: white;
-}
-
-.brand-name{
-	position: absolute;
-	display: inline-block;
-	color: white;
-	top: 20%;
-	left: 30%;
-	font-size: 5rem;
-	border-radius: 20px;
-	border: 2px solid rgb(233, 61, 90);
-	transition: 0.5s;
-	-webkit-box-reflect: below 3px linear-gradient(transparent,transparent, rgba(233, 61, 90, 0.15), rgba(233, 61, 90, 0.2));
-}
-
-
-.brand-name:hover{
-	font-size: 6rem;
-	left: 27%;
-	background:rgb(233, 61, 90);
-	/* border: none; */
-	box-shadow: 10px 10px 10px rgba(233, 61, 90, 0.2), 
-				-10px 10px 10px rgba(233, 61, 90, 0.2), 
-				-10px -10px 10px rgba(233, 61, 90, 0.2), 
-				10px -10px 10px rgba(233, 61, 90, 0.2);
-}
-
-#branding-btn{
-	position: absolute;
-	font-size: 1.5rem;
-	background: white; /*#ff414d */
-	height: 50px;
-	width: 50px;
-	outline: none;
-	border: none;
-	color: gray;
-	border-radius: 50%;
-	top: 65%;
-	left: 45%;
-	justify-content: center;
-	text-align: center;
-	align-items: center;
-	cursor: pointer;
-	transition: 0.5s;
-}
-
-#branding-btn:hover{
-	color: #ff414d;
-}
-
-.my-logo{
-	position: absolute;
-	display: inline-block;
-	top: 95%;
-	left: 42%;
-	font-size: 0.8rem;
-	text-align: center;
-	align-items: center;
-}
-
-.my-logo:hover{
-	color:rgb(233, 61, 90);
-}
-
-.branding-animation{
-	animation-name: moveUp;
-	animation-iteration-count: 1;
-	animation-duration: 1s;
-	animation-fill-mode: forwards;
-}
-
-@keyframes moveUp {
-	from {top: 0; opacity:100%;}
-	to {top: -100%; opacity: 50%;}
-}
 
 
 
