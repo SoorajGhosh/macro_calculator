@@ -10,7 +10,10 @@ body{
 	position: relative;
 }
 
-
+a{
+	text-decoration: none;
+	outline: none;
+}
 
 
 
@@ -21,44 +24,45 @@ body{
 #branding-icon{
 	position: absolute;
 	display: inline-block;
-	background: rgba(1, 5, 26, 0.7);
+	background: rgba(1, 5, 26, 1);
 	height: 100%;
 	width: 100%;
-	border-radius: 20px;
+	border-radius: 10px;
 	overflow: hidden;
 	bottom: 0%;
 	right: 0%;
 	transition: 0.5s;
-	clip-path: circle(5.7% at 91.1% 49.3%);
+	clip-path: circle(3.8% at 95% 50%);	/* radius at origin-point(x y)*/
 }
-
-#branding-icon img {
-	position: absolute;
-	bottom: 40%;
-	right: 1%;
-	height: 120px;
-	width: 120px;
-	transition: all 0.5s;
-	clip-path: circle(30% at 50% 50%);	/* radius at origin-point(x y) */
-}
-
 
 #branding-icon:hover{
-	background:rgba(1, 5, 26, 1);;
 	clip-path: circle(100% at 50% 50%);
 }
 
-#branding-icon:hover img{
-	opacity: 0%;
-	clip-path: circle(50% at 50% 50%);		
+#branding-icon:active{
+	clip-path: circle(100% at 50% 50%);
 }
 
+#branding-info{
+	position: absolute;
+	top: 45%;
+	right: 1.4%;
+	font-size: 3.5rem;
+	display: inline-block;
+	color: white;
+	transition: 0.3s;
+}
+
+#branding-icon:hover #branding-info{
+	opacity: 0%;
+	color: rgb(233, 61, 90);
+}
 
 .brand-icon-name{
 	position: absolute;
 	display: inline-block;
 	color: white;
-	top: 20%;
+	top: 10%;
 	left: 30%;
 	font-size: 3.5rem;
 	border-radius: 10px;
@@ -66,7 +70,6 @@ body{
 	transition: 0.5s;
 	-webkit-box-reflect: below 3px linear-gradient(transparent,transparent, rgba(233, 61, 90, 0.15), rgba(233, 61, 90, 0.2));
 }
-
 
 .brand-icon-name:hover{
 	font-size: 4rem;
@@ -78,18 +81,60 @@ body{
 				10px -10px 10px rgba(233, 61, 90, 0.2);
 }
 
+#branding-icon img {
+	position: absolute;
+	top: 40%;
+	left: 30%;
+	height: 150px;
+	width: 120px;
+	border-radius: 10px;
+	transition: all 0.5s;
+	-webkit-box-reflect: below 1px linear-gradient(transparent,transparent, transparent, rgba(233, 61, 90, 0.2));
+}
+
+.fab{
+	position: absolute;
+	margin: 0px;
+	padding: 0px;
+	left: 65%;
+	font-size: 4rem;
+	transition: 0.3s;
+	color: whitesmoke;
+}
+
+.fab:hover{
+	color: rgb(233, 61, 90);
+}
+
+#ig-icon{
+	top: 40%;
+}
+
+#fb-icon{
+	top: 55%;
+}
 
 .brand-icon-my-logo{
 	position: absolute;
 	display: inline-block;
+	padding: 1%;
+	border-radius: 3px;
 	bottom: 2%;
 	right: 2%;
 	font-size: 0.8rem;
 	text-align: center;
 	align-items: center;
+	transition: 0.2s;
 }
 
-
+.brand-icon-my-logo:hover {
+	color: black;
+	background: rgba(32, 211, 247,1);
+	box-shadow: 2px 2px 6px rgba(32, 211, 247,0.2), 
+				-2px 2px 6px rgba(32, 211, 247,0.2), 
+				-2px -2px 6px rgba(32, 211, 247,0.2), 
+				2px -2px 6px rgba(32, 211, 247,0.2);
+}
 
 
 

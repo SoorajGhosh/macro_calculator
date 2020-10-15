@@ -166,9 +166,9 @@ var UIcontroller = (function(){
     var domValues = function(){
         return {
             // BRANDING
-            branding : document.querySelector('.branding'),
-            brandItems : document.querySelectorAll('.brand'),
-            brandBtn : document.getElementById('branding-btn'),
+            // branding : document.querySelector('.branding'),
+            // brandItems : document.querySelectorAll('.brand'),
+            // brandBtn : document.getElementById('branding-btn'),
             // FORM INPUT
             heightValue : document.querySelector('#height-inp'),
             heightUnit : document.querySelector('#height-unit'),
@@ -194,7 +194,9 @@ var UIcontroller = (function(){
             // RESULT
             resultValue : document. querySelector('#calc-result-value'),
             resultUnit : document.querySelector('#calc-result-unit'),
-            shownResult : document.getElementById('shown-result-category')
+            shownResult : document.getElementById('shown-result-category'),
+            // BRANDING
+            branding : document. querySelector('#branding-icon'),
         }
     }
 
@@ -435,11 +437,11 @@ var controller = (function(dataCalc, UIctrl){
         }
     }
 
-    function addBrnadingAnimation(){
-        dom.branding.classList.toggle('branding-animation');
-    }
+    // function addBrnadingAnimation(){
+    //     dom.branding.classList.toggle('branding-animation');
+    // }
 
-    dom.brandBtn.addEventListener('click', addBrnadingAnimation)      // adding a toggle class which will hold the animation and other changs in branding
+    // dom.brandBtn.addEventListener('click', addBrnadingAnimation)      // adding a toggle class which will hold the animation and other changs in branding
     dom.calcBtn.addEventListener('click', calculateAndShow);
     dom.clearBtn.addEventListener('click', clearFunc);
     dom.resultMethods.addEventListener('click',checkResultType);
@@ -457,7 +459,8 @@ var controller = (function(dataCalc, UIctrl){
     dom.goal_time_spanValue.addEventListener("input", updateVal);
     dom.goal_time_periodValue.addEventListener("input", updateVal);
     dom.gender.addEventListener("input", updateVal);
-        
+    // SETING FOCUS ON BRANDING BEFORE ANY CALCULATION HAS OCCURED
+    dom.branding.classList.add('active');    
 
     // THE CODE BELOW THE BUTTON CLICK ONLY HApPENS AFTER THE BUTTON IS CLICKED
 
