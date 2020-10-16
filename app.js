@@ -192,7 +192,7 @@ var UIcontroller = (function(){
             resultUnit : document.querySelector('#calc-result-unit'),
             shownResult : document.getElementById('shown-result-category'),
             // BRANDING
-            branding : document. querySelector('.branding-icon'),
+            branding : document. querySelector('.branding'),
         }
     }
 
@@ -322,7 +322,7 @@ var controller = (function(dataCalc, UIctrl){
             }
             // SETTING THE FIRST CALCULATION VARIABLE TO TRUE SO AS TO DEFINE THAT THE FIRST PRESS ON THR CALCULATE BUTTON IS PRESSED.
             if (!firstCalculation){
-                dom.branding.classList.remove('branding-fill-icon');    // Removing the branding screen from the result section
+                dom.branding.classList.remove('branding-fill');    // Removing the branding screen from the result section
                 firstCalculation = true;
                 // SETTING THE DISPLAYS CHANGES ACCORDING TO RESPONSIVE PAGES
                 if (mobileView){
@@ -340,6 +340,7 @@ var controller = (function(dataCalc, UIctrl){
     }
     
     var clearFunc = function(){
+        dom.branding.classList.add('branding-fill');   // clearing gets back the branding on the results section
         if (mobileView){
             UIctrl.elementsDisplayChange([dom.resultMobileMetods,],'none');
         } else {
@@ -433,7 +434,6 @@ var controller = (function(dataCalc, UIctrl){
         }
     }
 
-    // dom.brandBtn.addEventListener('click', addBrnadingAnimation)      // adding a toggle class which will hold the animation and other changs in branding
     dom.calcBtn.addEventListener('click', calculateAndShow);
     dom.clearBtn.addEventListener('click', clearFunc);
     dom.resultMethods.addEventListener('click',checkResultType);
@@ -452,7 +452,7 @@ var controller = (function(dataCalc, UIctrl){
     dom.goal_time_periodValue.addEventListener("input", updateVal);
     dom.gender.addEventListener("input", updateVal);
     // SETING BRANDING TO FILL THE RESULT SCREEN BEFORE ANY CALCULATION HAS OCCURED
-    dom.branding.classList.add('branding-fill-icon');    
+    dom.branding.classList.add('branding-fill');    
 
     // THE CODE BELOW THE BUTTON CLICK ONLY HApPENS AFTER THE BUTTON IS CLICKED
 
