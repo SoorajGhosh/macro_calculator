@@ -89,45 +89,63 @@ a{
 				10px -10px 10px rgba(233, 61, 90, 0.2);
 }
 
+
 .personal {
 	position: relative;
 	display: inline-block;
+	background: transparent;
 	top: 45%;
 	left: 20%;
-	height: 202px;
-	width: 162px;
-	border-radius: 10px;
-	justify-content: center;
-	transition: all 0.5s;
-}
-
-.personal:hover {
-	height: 250px;
-}
-
-.personal img {
-	position: absolute;
 	height: 200px;
 	width: 160px;
 	border-radius: 10px;
-	transition: all 0.5s;
-	-webkit-box-reflect: below 1px linear-gradient(transparent,transparent, transparent, rgba(233, 61, 90, 0.2));
+	overflow: hidden;
+	justify-content: center;
+	-webkit-box-reflect: below 3px linear-gradient(transparent,transparent, transparent, rgba(233, 61, 90, 0.2));
 }
 
-.info{
-	color: white;
-	display: inline-block;
+.personal-inner{
+	position: relative;
+	height: 100%;
+	width: 100%;
+	justify-content: center;
+	border-radius: 10px;
+	transition: all 0.8s;
+	transform-style: preserve-3d;
+}
+
+.personal:hover .personal-inner{
+	transform: rotateY(180deg);
+}
+
+.personal-img, .personal-info{
 	position: absolute;
+	height: 100%;
+	width: 100%;
+	border-radius: 10px;
+	backface-visibility: hidden;
+	transition: all 0.8s;
+}
+
+.personal-info{
+	background: rgba(1, 5, 26, 1);
+	border: 1.5px solid rgb(233, 61, 90);
+	color:whitesmoke;
+	text-align: center;
+	transform: rotateY(180deg);
 }
 
 .info-big{
-	font-size: 1.2rem;
-	bottom: 9%;
+	position: relative;
+	top: 30%;
+	font-size: 1.6rem;
+	font-weight: bold;
 }
 
 .info-small{
+	position: relative;
+	top: 30%;
 	font-size: 0.8rem;
-	bottom: 2%;
 }
 
 
@@ -639,42 +657,16 @@ a{
 	}
 
 	.personal{
-		height: 80px;
-		width: 80px;
-	}
-
-	.personal:hover{
-		height: 130px;
-		width: 120px;
-	}
-
-	.personal img {
 		height: 100px;
-		width: 80px;
-		clip-path: circle(38% at 50% 50%);
-	}
-
-	.personal:hover img{
-		clip-path: circle(100% at 50% 50%);
-	}
-	
-	.info{
-		transition: 0.8s;
-		opacity: 0%;
-	}
-
-	.personal:hover .info{
-		opacity: 100%;
+		width: 75px;
 	}
 
 	.info-big{
-		font-size: 0.8rem;
-		bottom: 12%;
+		font-size: 0.7rem;
 	}
 
 	.info-small{
-		font-size: 0.6rem;
-		bottom: 2%;
+		font-size: 0.5rem;
 	}
 
 		
