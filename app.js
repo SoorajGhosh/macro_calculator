@@ -110,7 +110,7 @@ var dataCalculator = (function(){
 
     function calculate(form_val){
         var constants = getConstants(form_val);
-        
+
         var weight = (form_val.weight)/constants.wgtConst;
         var height = (form_val.height)/constants.hgtConst;
         var age = (form_val.age);
@@ -130,12 +130,32 @@ var dataCalculator = (function(){
         var goal_target_calorie = parseInt(constants.goalTargetConst+(constants.goalCalorieConst*goal_weight_dif));
         var goal_time = (goal_time_span*constants.goalTimePeriodConst);
         var daily_calorie_intake_val = maintenance_cal_val+(goal_target_calorie/goal_time);
+        
+        // Getting body fat percentage baed on US Navy Method
+        // Did it without using getConstant bcz there will be a lot of constants to handle then
+        if(form_val.bodyValues){
+            neckVal = form_val.bodyValues.neck;
+            waistVal = form_val.bodyValues.waist;
+            hipVal = form_val.bodyValues.hip;
+            if (form_val.heightUnit==='cms' && form_val.gender==='male'){
+                body_fat_perc_val = (495/(1.0324 - 0.19077*Math.log10(waistVal-neckVal) + 0.15456*Math.log10(height)))-450;
+            } else if (form_val.heightUnit==='cms' && form_val.gender==='female'){
+                body_fat_perc_val = (495/(1.29579 - 0.35004*Math.log10(waistVal+hipVal-neckVal) + 0.22100*Math.log10(height)))-450;
+            } else if (form_val.heightUnit==='inch' && form_val.gender==='male'){
+                body_fat_perc_val = 86.01*Math.log10(waistVal-neckVal) - 70.041*Math.log10(height) + 36.76;
+            } else if (form_val.heightUnit==='inch' && form_val.gender==='female'){
+                body_fat_perc_val = 163.205*Math.log10(waistVal+hipVal-neckVal) - 97.684*Math.log10(height) + 36.76
+            }
+            lean_body_mass_val = weight-(weight*body_fat_perc_val/100)
+        };
+
+        // All these values depend on lean body mass and to get the most accurate one we have put it later the body parts form is also analysed
         var protein_val = lean_body_mass_val*constants.macroConst*constants.proteinConst;  // bcz protein constant is for pounds and we need another const for kilogram lbm
         var fat_val = lean_body_mass_val*constants.macroConst*constants.fatConst;
         // var carb_val = lean_body_mass_val*constants.macroConst*constants.carbConst;
         var carb_val = (daily_calorie_intake_val-(protein_val*4)-(fat_val*9))/4;
-        var food_unit = 'gms'
-        
+        var food_unit = 'gms';
+
         return {
             bmi                 : [bmi_val, bmi_unit],
             bmr                 : [bmr_val, bmr_unit],
@@ -177,6 +197,12 @@ var UIcontroller = (function(){
             goal_time_spanValue : document.querySelector('#time-span-inp'),
             goal_time_periodValue : document.querySelector('#time-period-inp'),
             gender : document.querySelector('#gender-inp'),
+            //ACCURATE RESULT
+            accurateBtn : document.querySelector('#get-accurate'),
+            bodyForm : document.querySelector('.body-form'),
+            neckValue : document.querySelector('#neck-inp'),
+            waistValue : document.querySelector('#waist-inp'),
+            hipValue : document.querySelector('#hip-inp'),
             // BUTTON
             calcBtn : document.querySelector('#calc-btn'),
             clearBtn : document.querySelector("#clear-btn"),
@@ -251,7 +277,7 @@ var UIcontroller = (function(){
 // ============================== CONTROLS THE BASIC FUNCTIONS ======================================
 
 var controller = (function(dataCalc, UIctrl){
-    var formValues, resultObj, invalidField, pressedEvent, firstCalculation, mobileView, previousMobileResult;
+    var formValues, resultObj, invalidField, pressedEvent, firstCalculation, mobileView, previousMobileResult, bodyPartsValues;
     /*
     1. Get the Field Input Data
     2. Add the data to the DataCalculator
@@ -273,6 +299,7 @@ var controller = (function(dataCalc, UIctrl){
             goal_time_span      : domVal.goal_time_spanValue.value,
             goal_time_period    : domVal.goal_time_periodValue.value,
             gender              : domVal.gender.value,
+            bodyValues          : bodyPartsValues,
             mobileResults       : dom.resultMobileMetods
         }
     }
@@ -293,6 +320,8 @@ var controller = (function(dataCalc, UIctrl){
                     return false
                 }
             } else if (item === 'goal_weight_dif'){
+                continue
+            } else if (item === 'bodyValues'){
                 continue
             } else if (!obj[item]){
                 invalidField = item
@@ -363,11 +392,16 @@ var controller = (function(dataCalc, UIctrl){
         dom.resultValue.innerHTML = 0;                                  // Setting default in results
         dom.resultUnit.innerHTML = 'unit';
         dom.shownResult.innerHTML = 'BMI';
+        dom.neckValue.value = '';                                       // Body Parts form cleaned
+        dom.waistValue.value = '';
+        dom.hipValue.value = '';
+        dom.bodyForm.classList.remove('visible-body-form')              // Removing the form if visible already
         pressedEvent = undefined;                                       // Setting global Variables to undefined again
         formValues = undefined;
         resultObj = undefined;
         invalidField = undefined;
-        firstCalculation = undefined
+        firstCalculation = undefined;
+        bodyPartsValues = undefined
     }
     
     var checkResultType = function(event){
@@ -434,10 +468,37 @@ var controller = (function(dataCalc, UIctrl){
         }
     }
 
+    //CHECKS AND RETURNS VALUES FROM BODY FORM
+    var updateBodyVal = function(){
+        neck = dom.neckValue.value;
+        waist = dom.waistValue.value;
+        hip = dom.hipValue.value;
+        if (dom.gender.value==='male' && neck ){
+            if (!waist){
+                UIctrl.add_invalid_el('waist');     // Adding invalid field to the unfilled feilds in body form
+            } else{
+                bodyPartsValues = {neck : neck, waist : waist};
+                calculateAndShow();
+            }    
+        } else if ( dom.gender.value==='female' && neck){
+            if (!waist){
+                UIctrl.add_invalid_el('waist');     // Adding invalid field to the unfilled feilds in body form
+            } else if (!hip) {
+                UIctrl.add_invalid_el('hip');       // Adding invalid field to the unfilled feilds in body form
+            } else {
+                bodyPartsValues = {neck : neck, waist : waist, hip : hip};
+                calculateAndShow();
+            } 
+        }               
+    }
+
     dom.calcBtn.addEventListener('click', calculateAndShow);
     dom.clearBtn.addEventListener('click', clearFunc);
     dom.resultMethods.addEventListener('click',checkResultType);
     dom.macros.addEventListener('click',checkResultType);
+
+    // ACCURATE BUTTON 
+    dom.accurateBtn.addEventListener('click',function(){dom.bodyForm.classList.toggle('visible-body-form')})
     
     // Updating Result if any form value is changed
     dom.heightValue.addEventListener("input", updateVal);        // input : the function is triggered immediately 
@@ -451,6 +512,10 @@ var controller = (function(dataCalc, UIctrl){
     dom.goal_time_spanValue.addEventListener("input", updateVal);
     dom.goal_time_periodValue.addEventListener("input", updateVal);
     dom.gender.addEventListener("input", updateVal);
+    // BODY PARTS FORM
+    dom.neckValue.addEventListener("change", updateBodyVal);
+    dom.waistValue.addEventListener("change", updateBodyVal);
+    dom.hipValue.addEventListener("change", updateBodyVal);
     // SETING BRANDING TO FILL THE RESULT SCREEN BEFORE ANY CALCULATION HAS OCCURED
     dom.branding.classList.add('branding-fill');    
 
@@ -511,3 +576,6 @@ var controller = (function(dataCalc, UIctrl){
 
 
 
+//             neck                : (domVal.neck.value)? domVal.neck.value : 1,       // checking if value present if not 1 is given as value and not 0 so as not to get detected in the formValuesCheck
+//             waist               : (domVal.waist.value)? domVal.waist.value : 1,
+//             hip                 : (domVal.hip.value)? domVal.hip.value : 1,

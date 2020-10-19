@@ -53,7 +53,7 @@ a{
 	position: absolute;
 	top: 45%;
 	right: 1.4%;
-	font-size: 3.5rem;
+	font-size: 3.5em;
 	display: inline-block;
 	color: white;
 	transition: 0.3s;
@@ -513,6 +513,7 @@ a{
 	display: block;
 }
 
+
 .shown-result{
 	position: absolute;
 	font: normal small-caps bold 0.8em Arial;	/*font-style font-variant font-weight font-size/line-height font-family*/
@@ -521,6 +522,64 @@ a{
 }
 
 
+/* =========================NECK WAIST HIP FORM================== */
+.body-form{
+	position: absolute;
+	display: inline-block;
+	/* visibility: hidden; */
+	opacity: 0%;
+	background: white;
+	border-radius: 20px;
+	align-items: center;
+	justify-content: center;
+	border: 2px solid black;
+	top: 25%;
+	right: 17.5%;
+	width: 65%;
+	height: 50%;
+	transition: all 0.3s;
+}
+
+.body-form form{
+	margin: auto;
+}
+
+.visible-body-form{
+	opacity: 100%;
+}
+
+#get-accurate{
+	position: absolute;
+	display: inline-block;
+	border: none;
+	background: white;
+	border-radius: 50%;
+	outline: none;
+	height: 40px;
+	width: 40px;
+	top: 20%;
+	right: 3%;
+	/* clip-path: circle(50% at 54% 53%); */
+}
+
+#get-accurate i{
+	position: absolute;
+	color: rgba(255,0,0,0.5);
+	border-radius: 50%;
+	font-size: 50px;
+	display: inline-block;
+	top: 0%;
+	left: 0%;
+	transition: all 0.3s;
+}
+
+#get-accurate:hover i{
+	color: rgba(255,0,0,0.7);
+}
+
+#get-accurate:active i{
+	color: rgba(255,0,0,1);
+}
 
 
 
@@ -691,6 +750,28 @@ a{
 	.my-logo:hover{
 		font-size: 0.45rem;
 		font-weight: bold;
+	}
+
+	/*Body Form */
+	.body-form{
+		height: 60%;
+	}
+
+	#get-accurate{
+		top: 2%;
+		right: 15%;
+		height: 20px;
+		width: 20px;
+	}
+	#get-accurate i{
+		font-size: 25px;
+	}
+	.body-form .form-label{
+		font-size: 0.6rem;
+	}
+
+	.body-form .form-input{
+		padding: 2px;
 	}
 }
 
