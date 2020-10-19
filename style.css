@@ -526,7 +526,6 @@ a{
 .body-form{
 	position: absolute;
 	display: inline-block;
-	/* visibility: hidden; */
 	opacity: 0%;
 	background: white;
 	border-radius: 20px;
@@ -536,7 +535,7 @@ a{
 	top: 25%;
 	right: 17.5%;
 	width: 65%;
-	height: 50%;
+	height: 60%;
 	transition: all 0.3s;
 }
 
@@ -544,14 +543,11 @@ a{
 	margin: auto;
 }
 
-.visible-body-form{
-	opacity: 100%;
-}
-
-#get-accurate{
+.get-accurate{
 	position: absolute;
 	display: inline-block;
 	border: none;
+	opacity: 0%;
 	background: white;
 	border-radius: 50%;
 	outline: none;
@@ -559,10 +555,9 @@ a{
 	width: 40px;
 	top: 20%;
 	right: 3%;
-	/* clip-path: circle(50% at 54% 53%); */
 }
 
-#get-accurate i{
+.get-accurate i{
 	position: absolute;
 	color: rgba(255,0,0,0.5);
 	border-radius: 50%;
@@ -573,12 +568,20 @@ a{
 	transition: all 0.3s;
 }
 
-#get-accurate:hover i{
+.get-accurate:hover i{
 	color: rgba(255,0,0,0.7);
 }
 
-#get-accurate:active i{
+.get-accurate:active i{
 	color: rgba(255,0,0,1);
+}
+
+.visible{
+	opacity: 100%;
+}
+
+.hidden{
+	display: none;
 }
 
 
@@ -632,13 +635,12 @@ a{
 	.form-btn{
 		display: inline-block;
 		width: 45%;
-		margin: 10px 15px 0px 20px;
 		margin: 10px 1% 0px 2.5%;
 	}
 
 	.result{
 		display: block;
-		height: 30%;
+		height: 40%;
 		margin: 1% 2% 1% 2%;
 	}
 
@@ -660,8 +662,8 @@ a{
 	}
 
 	.macros{
-		width: 16%;
-		height: 65%;
+		width: 14%;
+		height: 46%;
 	}
 	
 	.macro{
@@ -757,13 +759,13 @@ a{
 		height: 60%;
 	}
 
-	#get-accurate{
+	.get-accurate{
 		top: 2%;
 		right: 15%;
 		height: 20px;
 		width: 20px;
 	}
-	#get-accurate i{
+	.get-accurate i{
 		font-size: 25px;
 	}
 	.body-form .form-label{
@@ -772,6 +774,10 @@ a{
 
 	.body-form .form-input{
 		padding: 2px;
+	}
+
+	.body-part-form .form-btn {
+		height: 35px;
 	}
 }
 

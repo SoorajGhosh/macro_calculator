@@ -198,11 +198,13 @@ var UIcontroller = (function(){
             goal_time_periodValue : document.querySelector('#time-period-inp'),
             gender : document.querySelector('#gender-inp'),
             //ACCURATE RESULT
-            accurateBtn : document.querySelector('#get-accurate'),
+            accurateBtn : document.querySelector('.get-accurate'),
             bodyForm : document.querySelector('.body-form'),
             neckValue : document.querySelector('#neck-inp'),
             waistValue : document.querySelector('#waist-inp'),
             hipValue : document.querySelector('#hip-inp'),
+            bodyPartSbmtBtn : document.querySelector("#body-part-submit-btn"),
+            bodyPartClearBtn : document.querySelector("#body-part-clear-btn"),
             // BUTTON
             calcBtn : document.querySelector('#calc-btn'),
             clearBtn : document.querySelector("#clear-btn"),
@@ -395,7 +397,7 @@ var controller = (function(dataCalc, UIctrl){
         dom.neckValue.value = '';                                       // Body Parts form cleaned
         dom.waistValue.value = '';
         dom.hipValue.value = '';
-        dom.bodyForm.classList.remove('visible-body-form')              // Removing the form if visible already
+        dom.bodyForm.classList.remove('visible')              // Removing the form if visible already
         pressedEvent = undefined;                                       // Setting global Variables to undefined again
         formValues = undefined;
         resultObj = undefined;
@@ -405,7 +407,7 @@ var controller = (function(dataCalc, UIctrl){
     }
     
     var checkResultType = function(event){
-        
+        var accurateBtnIn = ['body_fat_perc','lean_body_weight','daily_calorie'];    // Results when to show the accurate button
         // checking if any result other than daily calorie is selected if yes then remove the macors
         var macroCheck = function(element){ return (element.className === dom.allMacros[0].className || element.parentNode.className === dom.allMacros[0].className)}; // Checking for macros for any element
         
@@ -432,6 +434,7 @@ var controller = (function(dataCalc, UIctrl){
             dom.shownResult.innerHTML = target_el.id;
             dom.shownResult.style.textTransform="uppercase";
             UIctrl.resultDisplay(resultObj[target_el.id]);
+            dom.accurateBtn.classList.add('visible');
         } else if (mobileView && event.target.id === 'result-mobile-methods'){
             pressedEvent = event;                        // Set it as the target item of a dictionary so as the update function can recognise it as an event
             previousMobileResult = target_el;           // this will store the previous target to check during macro removsl
@@ -441,6 +444,12 @@ var controller = (function(dataCalc, UIctrl){
             if (target_el.value === 'daily_calorie'){
                 UIctrl.elementsDisplayChange(dom.allMacros, 'block');
             }
+            // Showing the accurate button 
+            if (accurateBtnIn.includes(target_el.value)){
+                dom.accurateBtn.classList.add('visible');
+            } else {
+                dom.accurateBtn.classList.remove('visible');
+            }
         } else if (target_el.className === dom.allResultMethods[0].className){
             pressedEvent = event;
             dom.shownResult.innerHTML = target_el.innerHTML;
@@ -448,6 +457,12 @@ var controller = (function(dataCalc, UIctrl){
             UIctrl.resultDisplay(resultObj[target_el.id]);
             if (target_el.id === 'daily_calorie'){
                 UIctrl.elementsDisplayChange(dom.allMacros, 'block');
+            }
+            // Showing the accurate button 
+            if (accurateBtnIn.includes(target_el.id)){
+                dom.accurateBtn.classList.add('visible');
+            } else {
+                dom.accurateBtn.classList.remove('visible');
             }
         }
     }
@@ -469,7 +484,7 @@ var controller = (function(dataCalc, UIctrl){
     }
 
     //CHECKS AND RETURNS VALUES FROM BODY FORM
-    var updateBodyVal = function(){
+    var bodySubmitVal = function(){
         neck = dom.neckValue.value;
         waist = dom.waistValue.value;
         hip = dom.hipValue.value;
@@ -479,6 +494,7 @@ var controller = (function(dataCalc, UIctrl){
             } else{
                 bodyPartsValues = {neck : neck, waist : waist};
                 calculateAndShow();
+                dom.bodyForm.classList.remove('visible');              // Visibility of the form is set to hidden again
             }    
         } else if ( dom.gender.value==='female' && neck){
             if (!waist){
@@ -488,8 +504,20 @@ var controller = (function(dataCalc, UIctrl){
             } else {
                 bodyPartsValues = {neck : neck, waist : waist, hip : hip};
                 calculateAndShow();
+                dom.bodyForm.classList.remove('visible');              // Visibility of the form is set to hidden again
             } 
-        }               
+        } else {
+            UIctrl.add_invalid_el('neck');
+        }              
+    }
+
+    var bodyClearVal = function(){
+        dom.neckValue.value = '';                                       // Body Parts form cleaned
+        dom.waistValue.value = '';
+        dom.hipValue.value = '';
+        dom.bodyForm.classList.remove('visible');              // Visibility of the form is set to hidden again
+        bodyPartsValues = undefined;
+        calculateAndShow();
     }
 
     dom.calcBtn.addEventListener('click', calculateAndShow);
@@ -498,7 +526,7 @@ var controller = (function(dataCalc, UIctrl){
     dom.macros.addEventListener('click',checkResultType);
 
     // ACCURATE BUTTON 
-    dom.accurateBtn.addEventListener('click',function(){dom.bodyForm.classList.toggle('visible-body-form')})
+    dom.accurateBtn.addEventListener('click',function(){dom.bodyForm.classList.add('visible')})
     
     // Updating Result if any form value is changed
     dom.heightValue.addEventListener("input", updateVal);        // input : the function is triggered immediately 
@@ -513,9 +541,8 @@ var controller = (function(dataCalc, UIctrl){
     dom.goal_time_periodValue.addEventListener("input", updateVal);
     dom.gender.addEventListener("input", updateVal);
     // BODY PARTS FORM
-    dom.neckValue.addEventListener("change", updateBodyVal);
-    dom.waistValue.addEventListener("change", updateBodyVal);
-    dom.hipValue.addEventListener("change", updateBodyVal);
+    dom.bodyPartSbmtBtn.addEventListener('click',bodySubmitVal);
+    dom.bodyPartClearBtn.addEventListener('click',bodyClearVal);
     // SETING BRANDING TO FILL THE RESULT SCREEN BEFORE ANY CALCULATION HAS OCCURED
     dom.branding.classList.add('branding-fill');    
 
