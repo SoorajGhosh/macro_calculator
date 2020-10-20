@@ -68,7 +68,7 @@ a{
 	display: inline-block;
 	top: 0%;
 	left: 0%;
-	transition: all 0.3s;
+	transition: color 0.3s;
 }
 
 .branding-white-btn i{
@@ -586,11 +586,11 @@ a{
 	position: absolute;
 	color: rgb(60, 61, 69);
 	border-radius: 50%;
-	font-size: 50px;
+	font-size: 40px;
 	display: inline-block;
 	top: 0%;
 	left: 0%;
-	transition: all 0.3s;
+	transition: color 0.3s;
 }
 
 .get-accurate:hover i{
@@ -609,6 +609,17 @@ a{
 	display: none;
 }
 
+.visibility-full{
+	visibility: visible;
+}
+
+.visibility-none{
+	visibility: hidden;
+}
+/* 
+.fa-times-circle{		
+	visibility: hidden;
+} */
 
 
 
@@ -815,7 +826,7 @@ a{
 	}
 
 	.body-part-form .form-btn {
-		height: 35px;
+		height: 30px;
 	}
 }
 

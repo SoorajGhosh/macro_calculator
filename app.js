@@ -199,6 +199,8 @@ var UIcontroller = (function(){
             gender : document.querySelector('#gender-inp'),
             //ACCURATE RESULT
             accurateBtn : document.querySelector('.get-accurate'),
+            accurateIcon : document.querySelector('#accurate-icon'),
+            accurateCrossIcon : document.querySelector('#accurate-cross-icon'),
             bodyForm : document.querySelector('.body-form'),
             neckValue : document.querySelector('#neck-inp'),
             waistValue : document.querySelector('#waist-inp'),
@@ -221,7 +223,9 @@ var UIcontroller = (function(){
             shownResult : document.getElementById('shown-result-category'),
             // BRANDING
             branding : document. querySelector('.branding'),
-            brandingBtn : document. querySelector('.branding-btn')
+            brandingBtn : document. querySelector('.branding-btn'),
+            brandingIcon : document.querySelector('#branding-icon'),
+            brandingCrossIcon : document.querySelector('#branding-cross-icon')
         }
     }
 
@@ -528,7 +532,13 @@ var controller = (function(dataCalc, UIctrl){
     dom.macros.addEventListener('click',checkResultType);
 
     // ACCURATE BUTTON 
-    dom.accurateBtn.addEventListener('click',function(){dom.bodyForm.classList.toggle('hidden')})
+    dom.accurateBtn.addEventListener('click',function(){
+        dom.bodyForm.classList.toggle('hidden');
+        dom.accurateIcon.classList.toggle('visibility-none');
+        dom.accurateCrossIcon.classList.toggle('visibility-none');
+    })
+    
+    dom.accurateCrossIcon.classList.add('visibility-none');
     dom.accurateBtn.classList.add('hidden');
     // Updating Result if any form value is changed
     dom.heightValue.addEventListener("input", updateVal);        // input : the function is triggered immediately 
@@ -548,7 +558,13 @@ var controller = (function(dataCalc, UIctrl){
     dom.bodyForm.classList.add('hidden'); 
     // SETING BRANDING TO FILL THE RESULT SCREEN BEFORE ANY CALCULATION HAS OCCURED
     dom.branding.classList.add('branding-fill'); 
-    dom.brandingBtn.addEventListener('click',function(){dom.branding.classList.toggle('branding-fill'); dom.brandingBtn.classList.toggle('branding-white-btn')})   
+    dom.brandingBtn.addEventListener('click',function(){
+        dom.branding.classList.toggle('branding-fill'); 
+        dom.brandingBtn.classList.toggle('branding-white-btn');
+        dom.brandingIcon.classList.toggle('visibility-none');
+        dom.brandingCrossIcon.classList.toggle('visibility-none');
+    })   
+    dom.brandingCrossIcon.classList.add('visibility-none');
     dom.brandingBtn.classList.add('hidden');
 
     // THE CODE BELOW THE BUTTON CLICK ONLY HApPENS AFTER THE BUTTON IS CLICKED
@@ -606,8 +622,3 @@ var controller = (function(dataCalc, UIctrl){
 
 
 
-
-
-//             neck                : (domVal.neck.value)? domVal.neck.value : 1,       // checking if value present if not 1 is given as value and not 0 so as not to get detected in the formValuesCheck
-//             waist               : (domVal.waist.value)? domVal.waist.value : 1,
-//             hip                 : (domVal.hip.value)? domVal.hip.value : 1,

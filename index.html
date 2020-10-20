@@ -79,7 +79,10 @@
 
 			<div class="calc-result">
 				<span id="calc-result-value">0</span>
-				<button class='get-accurate'><i class="fas fa-question-circle"></i></button>
+				<button class='get-accurate' title="Get More Accurate Results">
+					<i id='accurate-icon' class="fas fa-question-circle"></i>
+					<i id='accurate-cross-icon' class="fas fa-times-circle"></i>
+				</button>
 				<span id="calc-result-unit">unit</span>
 			</div>
 			
@@ -92,7 +95,7 @@
 					<input class='form-input'type="number" id="waist-inp" name="waist">		
 					
 					<label class='form-label' for="hip">Hip</label>
-					<input class='form-input'type="number" id="hip-inp" name="hip">			
+					<input class='form-input'type="number" id="hip-inp" name="hip" placeholder="Required For Females only">			
 
 					<input class='form-btn' id="body-part-submit-btn" type="button" value="Submit">
 
@@ -127,8 +130,7 @@
 			<div class="shown-result">Result: <span id="shown-result-category">BMI</span> </div>
 
 
-			<div class='branding'> 
-				<!-- <i id='branding-info' class="fas fa-info-circle"></i> -->
+			<div class='branding'>
 				<div class='personal'>
 					<div class="personal-inner">
 						<img class="personal-img" src="images/vipin.jpg" alt="VR-FIT"> 
@@ -152,7 +154,10 @@
 				<a href="#" class='brand my-logo'>Credits: Sooraj Ghosh</a>
 			</div>
 
-			<button class='branding-btn'><i class="fas fa-info-circle"></i></button>
+			<button class='branding-btn' title="TEAM VR-FIT">
+				<i id='branding-icon' class="fas fa-info-circle"></i>
+				<i id='branding-cross-icon' class="fas fa-times-circle"></i>
+			</button>
 		</div>
 
 	</div>
