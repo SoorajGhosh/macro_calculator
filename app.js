@@ -221,6 +221,7 @@ var UIcontroller = (function(){
             shownResult : document.getElementById('shown-result-category'),
             // BRANDING
             branding : document. querySelector('.branding'),
+            brandingBtn : document. querySelector('.branding-btn')
         }
     }
 
@@ -354,6 +355,7 @@ var controller = (function(dataCalc, UIctrl){
             // SETTING THE FIRST CALCULATION VARIABLE TO TRUE SO AS TO DEFINE THAT THE FIRST PRESS ON THR CALCULATE BUTTON IS PRESSED.
             if (!firstCalculation){
                 dom.branding.classList.remove('branding-fill');    // Removing the branding screen from the result section
+                dom.brandingBtn.classList.remove('hidden');        // Removing the hidden setting from the branding button as well
                 firstCalculation = true;
                 // SETTING THE DISPLAYS CHANGES ACCORDING TO RESPONSIVE PAGES
                 if (mobileView){
@@ -397,7 +399,7 @@ var controller = (function(dataCalc, UIctrl){
         dom.neckValue.value = '';                                       // Body Parts form cleaned
         dom.waistValue.value = '';
         dom.hipValue.value = '';
-        dom.bodyForm.classList.remove('visible')              // Removing the form if visible already
+        dom.bodyForm.classList.add('hidden')              // Removing the form if visible already
         pressedEvent = undefined;                                       // Setting global Variables to undefined again
         formValues = undefined;
         resultObj = undefined;
@@ -434,7 +436,7 @@ var controller = (function(dataCalc, UIctrl){
             dom.shownResult.innerHTML = target_el.id;
             dom.shownResult.style.textTransform="uppercase";
             UIctrl.resultDisplay(resultObj[target_el.id]);
-            dom.accurateBtn.classList.add('visible');
+            dom.accurateBtn.classList.remove('hidden');
         } else if (mobileView && event.target.id === 'result-mobile-methods'){
             pressedEvent = event;                        // Set it as the target item of a dictionary so as the update function can recognise it as an event
             previousMobileResult = target_el;           // this will store the previous target to check during macro removsl
@@ -446,9 +448,9 @@ var controller = (function(dataCalc, UIctrl){
             }
             // Showing the accurate button 
             if (accurateBtnIn.includes(target_el.value)){
-                dom.accurateBtn.classList.add('visible');
+                dom.accurateBtn.classList.remove('hidden');
             } else {
-                dom.accurateBtn.classList.remove('visible');
+                dom.accurateBtn.classList.add('hidden');
             }
         } else if (target_el.className === dom.allResultMethods[0].className){
             pressedEvent = event;
@@ -460,9 +462,9 @@ var controller = (function(dataCalc, UIctrl){
             }
             // Showing the accurate button 
             if (accurateBtnIn.includes(target_el.id)){
-                dom.accurateBtn.classList.add('visible');
+                dom.accurateBtn.classList.remove('hidden');
             } else {
-                dom.accurateBtn.classList.remove('visible');
+                dom.accurateBtn.classList.add('hidden');
             }
         }
     }
@@ -494,7 +496,7 @@ var controller = (function(dataCalc, UIctrl){
             } else{
                 bodyPartsValues = {neck : neck, waist : waist};
                 calculateAndShow();
-                dom.bodyForm.classList.remove('visible');              // Visibility of the form is set to hidden again
+                dom.bodyForm.classList.add('hidden');              // Visibility of the form is set to hidden again
             }    
         } else if ( dom.gender.value==='female' && neck){
             if (!waist){
@@ -504,7 +506,7 @@ var controller = (function(dataCalc, UIctrl){
             } else {
                 bodyPartsValues = {neck : neck, waist : waist, hip : hip};
                 calculateAndShow();
-                dom.bodyForm.classList.remove('visible');              // Visibility of the form is set to hidden again
+                dom.bodyForm.classList.add('hidden');              // Visibility of the form is set to hidden again
             } 
         } else {
             UIctrl.add_invalid_el('neck');
@@ -515,7 +517,7 @@ var controller = (function(dataCalc, UIctrl){
         dom.neckValue.value = '';                                       // Body Parts form cleaned
         dom.waistValue.value = '';
         dom.hipValue.value = '';
-        dom.bodyForm.classList.remove('visible');              // Visibility of the form is set to hidden again
+        dom.bodyForm.classList.add('hidden');                           // Visibility of the form is set to hidden again
         bodyPartsValues = undefined;
         calculateAndShow();
     }
@@ -526,8 +528,8 @@ var controller = (function(dataCalc, UIctrl){
     dom.macros.addEventListener('click',checkResultType);
 
     // ACCURATE BUTTON 
-    dom.accurateBtn.addEventListener('click',function(){dom.bodyForm.classList.add('visible')})
-    
+    dom.accurateBtn.addEventListener('click',function(){dom.bodyForm.classList.toggle('hidden')})
+    dom.accurateBtn.classList.add('hidden');
     // Updating Result if any form value is changed
     dom.heightValue.addEventListener("input", updateVal);        // input : the function is triggered immediately 
     dom.heightUnit.addEventListener("input", updateVal);
@@ -543,8 +545,11 @@ var controller = (function(dataCalc, UIctrl){
     // BODY PARTS FORM
     dom.bodyPartSbmtBtn.addEventListener('click',bodySubmitVal);
     dom.bodyPartClearBtn.addEventListener('click',bodyClearVal);
+    dom.bodyForm.classList.add('hidden'); 
     // SETING BRANDING TO FILL THE RESULT SCREEN BEFORE ANY CALCULATION HAS OCCURED
-    dom.branding.classList.add('branding-fill');    
+    dom.branding.classList.add('branding-fill'); 
+    dom.brandingBtn.addEventListener('click',function(){dom.branding.classList.toggle('branding-fill'); dom.brandingBtn.classList.toggle('branding-white-btn')})   
+    dom.brandingBtn.classList.add('hidden');
 
     // THE CODE BELOW THE BUTTON CLICK ONLY HApPENS AFTER THE BUTTON IS CLICKED
 

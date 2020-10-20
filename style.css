@@ -26,7 +26,7 @@ a{
 .branding{
 	position: absolute;
 	display: inline-block;
-	background: rgba(1, 5, 26, 1);
+	background: transparent;
 	height: 100%;
 	width: 100%;
 	border-radius: 10px;
@@ -34,21 +34,51 @@ a{
 	bottom: 0%;
 	right: 0%;
 	transition: 0.5s;
-	clip-path: circle(3.8% at 95% 50%);	/* radius at origin-point(x y)*/
+	/* clip-path: circle(3.8% at 95% 50%);	radius at origin-point(x y) */
+	clip-path: circle(2.5% at 47% 95%);
 }
-
+/* 
 .branding:hover{
 	clip-path: circle(100% at 50% 50%);
-}
+} */
 
 .branding-fill{
+	background: rgba(1, 5, 26, 1);
 	clip-path: circle(100% at 50% 50%);
 }
 
-.branding-fill #branding-info{
-	display: none;
+.branding-btn{
+	position: absolute;
+	display: inline-block;
+	border: none;
+	background: transparent;
+	border-radius: 50%;
+	outline: none;
+	height: 40px;
+	width: 40px;
+	bottom: 2%;
+	right: 50%;
 }
 
+.branding-btn i{
+	position: absolute;
+	color: rgb(60, 61, 69);
+	border-radius: 50%;
+	font-size: 40px;
+	display: inline-block;
+	top: 0%;
+	left: 0%;
+	transition: all 0.3s;
+}
+
+.branding-white-btn i{
+	color: white;
+}
+/* 
+.branding-fill #branding-info{
+	display: none;
+} */
+/* 
 #branding-info{
 	position: absolute;
 	top: 45%;
@@ -62,7 +92,7 @@ a{
 .branding:hover #branding-info{
 	opacity: 0%;
 	color: rgb(233, 61, 90);
-}
+} */
 
 .brand-name{
 	position: absolute;
@@ -228,10 +258,6 @@ a{
 				-2px -2px 6px rgba(32, 211, 247,0.2), 
 				2px -2px 6px rgba(32, 211, 247,0.2);
 }
-
-
-
-
 
 
 
@@ -526,7 +552,6 @@ a{
 .body-form{
 	position: absolute;
 	display: inline-block;
-	opacity: 0%;
 	background: white;
 	border-radius: 20px;
 	align-items: center;
@@ -544,22 +569,22 @@ a{
 }
 
 .get-accurate{
-	position: absolute;
+	/* position: absolute; */
+	position: relative;
 	display: inline-block;
 	border: none;
-	opacity: 0%;
 	background: white;
 	border-radius: 50%;
 	outline: none;
 	height: 40px;
 	width: 40px;
-	top: 20%;
-	right: 3%;
+	top: 0%;
+	left: 35.5%;
 }
 
 .get-accurate i{
 	position: absolute;
-	color: rgba(255,0,0,0.5);
+	color: rgb(60, 61, 69);
 	border-radius: 50%;
 	font-size: 50px;
 	display: inline-block;
@@ -646,6 +671,7 @@ a{
 
 		
 	#result-mobile-methods{
+		padding: 4px;
 		display: none;
 		width: auto;
 	}
@@ -690,7 +716,7 @@ a{
 	
 	/* mobile branding*/
 	.branding{
-		clip-path: circle(3.8% at 95% 7%);
+		clip-path: circle(2.5% at 97% 5%);
 	}
 
 	.branding-fill{
@@ -708,6 +734,17 @@ a{
 		font-size: 1.65rem;
 	}
 
+	.branding-btn{
+		top: 1.8%;
+		right: 1.7%;
+		height: 25px;
+		width: 25px;
+	}
+	
+	.branding-btn i{
+		font-size: 25px;
+	}
+
 	.brand-name{
 		font-size: 2.7rem;
 	}
@@ -718,29 +755,29 @@ a{
 	}
 
 	.personal{
-		height: 100px;
-		width: 75px;
+		height: 120px;
+		width: 90px;
 	}
 
 	.info-big{
-		font-size: 0.7rem;
+		font-size: 0.8rem;
 	}
 
 	.info-small{
-		font-size: 0.5rem;
+		font-size: 0.6rem;
 	}
 
 		
 	.icon:hover {
-		width: 40%;
+		width: 37%;
 	}
 
 	.fab{
-		font-size: 3rem;
+		font-size: 3.5rem;
 	}
 
 	.icon-text{
-		font-size: 0.9rem;
+		font-size: 0.8rem;
 		font-weight: bold;
 	}
 
@@ -756,7 +793,8 @@ a{
 
 	/*Body Form */
 	.body-form{
-		height: 60%;
+		top: 20%;
+		height: 63%;
 	}
 
 	.get-accurate{
