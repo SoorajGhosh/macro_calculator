@@ -501,6 +501,8 @@ var controller = (function(dataCalc, UIctrl){
                 bodyPartsValues = {neck : neck, waist : waist};
                 calculateAndShow();
                 dom.bodyForm.classList.add('hidden');              // Visibility of the form is set to hidden again
+                dom.accurateIcon.classList.toggle('visibility-none');
+                dom.accurateCrossIcon.classList.toggle('visibility-none');
             }    
         } else if ( dom.gender.value==='female' && neck){
             if (!waist){
@@ -511,6 +513,8 @@ var controller = (function(dataCalc, UIctrl){
                 bodyPartsValues = {neck : neck, waist : waist, hip : hip};
                 calculateAndShow();
                 dom.bodyForm.classList.add('hidden');              // Visibility of the form is set to hidden again
+                dom.accurateIcon.classList.toggle('visibility-none');
+                dom.accurateCrossIcon.classList.toggle('visibility-none');
             } 
         } else {
             UIctrl.add_invalid_el('neck');
@@ -522,6 +526,8 @@ var controller = (function(dataCalc, UIctrl){
         dom.waistValue.value = '';
         dom.hipValue.value = '';
         dom.bodyForm.classList.add('hidden');                           // Visibility of the form is set to hidden again
+        dom.accurateIcon.classList.toggle('visibility-none');
+        dom.accurateCrossIcon.classList.toggle('visibility-none');
         bodyPartsValues = undefined;
         calculateAndShow();
     }
