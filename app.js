@@ -285,12 +285,7 @@ var UIcontroller = (function(){
 
 var controller = (function(dataCalc, UIctrl){
     var formValues, resultObj, invalidField, pressedEvent, firstCalculation, mobileView, previousMobileResult, bodyPartsValues;
-    /*
-    1. Get the Field Input Data
-    2. Add the data to the DataCalculator
-    3. Calculate the Result
-    4. Display Result to the UI
-    */
+    
     var dom = UIctrl.dom;
     
     var setFormValues = function(domVal){
@@ -358,13 +353,13 @@ var controller = (function(dataCalc, UIctrl){
             }
             // SETTING THE FIRST CALCULATION VARIABLE TO TRUE SO AS TO DEFINE THAT THE FIRST PRESS ON THR CALCULATE BUTTON IS PRESSED.
             if (!firstCalculation){
-                dom.branding.classList.remove('branding-fill');    // Removing the branding screen from the result section
-                dom.brandingBtn.classList.remove('hidden');        // Removing the hidden setting from the branding button as well
+                dom.branding.classList.remove('branding-fill');                         // Removing the branding screen from the result section
+                dom.brandingBtn.classList.remove('hidden');                             // Removing the hidden setting from the branding button as well
                 firstCalculation = true;
                 // SETTING THE DISPLAYS CHANGES ACCORDING TO RESPONSIVE PAGES
                 if (mobileView){
                     UIctrl.elementsDisplayChange([dom.resultMobileMetods,], 'block');   // BCZ WE NEED LISTS TO CHANGE DISPLAY
-                    dom.resultMobileMetods.addEventListener('input', checkResultType)         // we set it here bcz else it was not existing in the dom before as its display is none
+                    dom.resultMobileMetods.addEventListener('input', checkResultType)   // we set it here bcz else it was not existing in the dom before as its display is none
                 } else {
                     UIctrl.elementsDisplayChange(dom.allResultMethods, 'inline-block'); // DISPLAY THE RESULT METHODS
                 } 
@@ -377,15 +372,15 @@ var controller = (function(dataCalc, UIctrl){
     }
     
     var clearFunc = function(){
-        dom.branding.classList.add('branding-fill');   // clearing gets back the branding on the results section
+        dom.branding.classList.add('branding-fill');                        // clearing gets back the branding on the results section
         if (mobileView){
             UIctrl.elementsDisplayChange([dom.resultMobileMetods,],'none');
         } else {
-            UIctrl.elementsDisplayChange(dom.allResultMethods,'none');   // Hiding the result methods
+            UIctrl.elementsDisplayChange(dom.allResultMethods,'none');      // Hiding the result methods
         }
         
-        UIctrl.elementsDisplayChange(dom.allMacros,'none');             // Hiding the macro
-        dom.heightValue.value ='';                                      // Deleting values from form
+        UIctrl.elementsDisplayChange(dom.allMacros,'none');                 // Hiding the macro
+        dom.heightValue.value ='';                                          // Deleting values from form
         dom.heightUnit.value = 'cms';
         dom.weightValue.value = '';
         dom.weightUnit.value = 'kgs';
@@ -403,7 +398,7 @@ var controller = (function(dataCalc, UIctrl){
         dom.neckValue.value = '';                                       // Body Parts form cleaned
         dom.waistValue.value = '';
         dom.hipValue.value = '';
-        dom.bodyForm.classList.add('hidden')              // Removing the form if visible already
+        dom.bodyForm.classList.add('hidden')                            // Removing the form if visible already
         pressedEvent = undefined;                                       // Setting global Variables to undefined again
         formValues = undefined;
         resultObj = undefined;
@@ -417,7 +412,7 @@ var controller = (function(dataCalc, UIctrl){
         // checking if any result other than daily calorie is selected if yes then remove the macors
         var macroCheck = function(element){ return (element.className === dom.allMacros[0].className || element.parentNode.className === dom.allMacros[0].className)}; // Checking for macros for any element
         
-        if (mobileView && event.target.id === 'result-mobile-methods'){         // checking if mobile result methods and in mobile view
+        if (mobileView && event.target.id === 'result-mobile-methods'){             // checking if mobile result methods and in mobile view
             var target_el = event.target.options[event.target.selectedIndex];
         } else {
             var target_el = event.target;
@@ -442,8 +437,8 @@ var controller = (function(dataCalc, UIctrl){
             UIctrl.resultDisplay(resultObj[target_el.id]);
             dom.accurateBtn.classList.remove('hidden');
         } else if (mobileView && event.target.id === 'result-mobile-methods'){
-            pressedEvent = event;                        // Set it as the target item of a dictionary so as the update function can recognise it as an event
-            previousMobileResult = target_el;           // this will store the previous target to check during macro removsl
+            pressedEvent = event;                                               // Set it as the target item of a dictionary so as the update function can recognise it as an event
+            previousMobileResult = target_el;                                   // this will store the previous target to check during macro removsl
             dom.shownResult.innerHTML = target_el.text;
             dom.shownResult.style.textTransform="uppercase";
             UIctrl.resultDisplay(resultObj[target_el.value]);
@@ -496,23 +491,23 @@ var controller = (function(dataCalc, UIctrl){
         hip = dom.hipValue.value;
         if (dom.gender.value==='male' && neck ){
             if (!waist){
-                UIctrl.add_invalid_el('waist');     // Adding invalid field to the unfilled feilds in body form
+                UIctrl.add_invalid_el('waist');                         // Adding invalid field to the unfilled feilds in body form
             } else{
                 bodyPartsValues = {neck : neck, waist : waist};
                 calculateAndShow();
-                dom.bodyForm.classList.add('hidden');              // Visibility of the form is set to hidden again
+                dom.bodyForm.classList.add('hidden');                   // Visibility of the form is set to hidden again
                 dom.accurateIcon.classList.toggle('visibility-none');
                 dom.accurateCrossIcon.classList.toggle('visibility-none');
             }    
         } else if ( dom.gender.value==='female' && neck){
             if (!waist){
-                UIctrl.add_invalid_el('waist');     // Adding invalid field to the unfilled feilds in body form
+                UIctrl.add_invalid_el('waist');                         // Adding invalid field to the unfilled feilds in body form
             } else if (!hip) {
-                UIctrl.add_invalid_el('hip');       // Adding invalid field to the unfilled feilds in body form
+                UIctrl.add_invalid_el('hip');                           // Adding invalid field to the unfilled feilds in body form
             } else {
                 bodyPartsValues = {neck : neck, waist : waist, hip : hip};
                 calculateAndShow();
-                dom.bodyForm.classList.add('hidden');              // Visibility of the form is set to hidden again
+                dom.bodyForm.classList.add('hidden');                   // Visibility of the form is set to hidden again
                 dom.accurateIcon.classList.toggle('visibility-none');
                 dom.accurateCrossIcon.classList.toggle('visibility-none');
             } 
@@ -547,7 +542,7 @@ var controller = (function(dataCalc, UIctrl){
     dom.accurateCrossIcon.classList.add('visibility-none');
     dom.accurateBtn.classList.add('hidden');
     // Updating Result if any form value is changed
-    dom.heightValue.addEventListener("input", updateVal);        // input : the function is triggered immediately 
+    dom.heightValue.addEventListener("input", updateVal);               // input : the function is triggered immediately 
     dom.heightUnit.addEventListener("input", updateVal);
     dom.weightValue.addEventListener("input", updateVal);
     dom.weightUnit.addEventListener("input", updateVal);
