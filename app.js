@@ -378,7 +378,13 @@ var controller = (function(dataCalc, UIctrl){
         } else {
             UIctrl.elementsDisplayChange(dom.allResultMethods,'none');      // Hiding the result methods
         }
-        
+
+        // SETTING UP THE BRANDING BUTTON JUST LIKEIT WAS IN THE BEGINNING
+        dom.brandingBtn.classList.add('hidden');
+        dom.brandingBtn.classList.remove('branding-white-btn');
+        dom.brandingIcon.classList.remove('visibility-none');
+        dom.brandingCrossIcon.classList.add('visibility-none');
+
         UIctrl.elementsDisplayChange(dom.allMacros,'none');                 // Hiding the macro
         dom.heightValue.value ='';                                          // Deleting values from form
         dom.heightUnit.value = 'cms';
@@ -398,7 +404,8 @@ var controller = (function(dataCalc, UIctrl){
         dom.neckValue.value = '';                                       // Body Parts form cleaned
         dom.waistValue.value = '';
         dom.hipValue.value = '';
-        dom.bodyForm.classList.add('hidden')                            // Removing the form if visible already
+        dom.bodyForm.classList.add('hidden');                            // Removing the form if visible already
+        dom.accurateBtn.classList.add('hidden');                        // Hiding the accurate button too
         pressedEvent = undefined;                                       // Setting global Variables to undefined again
         formValues = undefined;
         resultObj = undefined;
